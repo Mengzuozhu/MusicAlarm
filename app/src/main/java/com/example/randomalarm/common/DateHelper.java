@@ -6,8 +6,7 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateHelper {
-    private final static Locale CHINA = Locale.CHINA;
-    private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", CHINA);//设置日期格式
+    private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);//设置日期格式
     //分钟转为毫秒
     public  final static  int MINUTE_TO_MILLIS = 60000;
 
@@ -42,21 +41,17 @@ public class DateHelper {
         long minutes = remainMinute / MINUTE_TO_MILLIS;
         String diffTime = "";
         if (days > 0) {
-            diffTime += getLocalFormat("%d天", days);
+            diffTime += StringHelper.getLocalFormat("%d天", days);
         }
         if (hours > 0) {
-            diffTime += getLocalFormat("%d小时", hours);
+            diffTime += StringHelper.getLocalFormat("%d小时", hours);
         }
         if (minutes >= 0) {
-            diffTime += getLocalFormat("%d分钟", minutes);
+            diffTime += StringHelper.getLocalFormat("%d分钟", minutes);
         } else {
             diffTime = "";
         }
         return diffTime;
-    }
-
-    private static String getLocalFormat(String format, Object... args) {
-        return String.format(CHINA, format, args);
     }
 
     /**
@@ -66,7 +61,7 @@ public class DateHelper {
      * @return
      */
     public static String getHourAndMinuteString(Calendar calendar) {
-        return getLocalFormat("%d:%d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
+        return StringHelper.getLocalFormat("%d:%d", calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE));
     }
 
     public static Calendar getCalendarByHourAndMinute(int hourOfDay, int minute) {

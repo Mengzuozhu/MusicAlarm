@@ -25,7 +25,7 @@ public class MainAdapter extends BaseQuickAdapter <AlarmSettingInfo, BaseViewHol
     @Override
     protected void convert(BaseViewHolder viewHolder, AlarmSettingInfo alarmSettingInfo) {
         int swhAlarmStatus = R.id.swh_alarm_status;
-        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowTime() + " id:" + alarmSettingInfo.getId())
+        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowedTime() + " id:" + alarmSettingInfo.getId())
                 .addOnClickListener(swhAlarmStatus);
         viewHolder.setChecked(swhAlarmStatus, alarmSettingInfo.getIsOpenStatus());
     }

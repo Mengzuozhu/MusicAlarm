@@ -54,8 +54,8 @@ public class AlarmSettingInfo implements Parcelable {
 
     @Generated(hash = 1196837071)
     public AlarmSettingInfo(Long id, int hour, int minute, Boolean isOpenStatus, int interval, int repeatFrequency,
-            int duration, ArrayList<AlarmRepeatMode> alarmRepeatMode, ArrayList<SongInfo> songInfos,
-            SongPlayedMode songPlayedMode) {
+                            int duration, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos,
+                            SongPlayedMode songPlayedMode) {
         this.id = id;
         this.hour = hour;
         this.minute = minute;
@@ -72,40 +72,8 @@ public class AlarmSettingInfo implements Parcelable {
     public AlarmSettingInfo() {
     }
 
-//    public boolean isTrigger(String currentTime) {
-//        currentRepeatNum = 0;
-//        if (!isOpenStatus) return false;
-//
-//        Calendar calendar = Calendar.getInstance();
-//        //修改为从0开始
-//        int weekDay = calendar.get(Calendar.DAY_OF_WEEK) - 1;
-//        if (AlarmRepeatMode.isNowNotInRepeatModeDay(alarmRepeatMode, weekDay)) return false;
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, hour);
-//        calendar.set(Calendar.MINUTE, minute);
-//        Log.w("id:", String.valueOf(id));
-//        //判断当前时间是否满足闹钟的触发时间，需考虑重复间隔和次数
-//        for (int i = 0; i < repeatFrequency; i++) {
-////            //若已经关闭闹钟，则不再提醒
-////            if (!isRemindLater && i > 0) {
-////                return false;
-////            }
-//            String triggerTime = DateHelper.getHourAndMinuteString(calendar);
-//            if (triggerTime.equals(currentTime)) {
-//                currentRepeatNum = i;
-//                //闹钟第一次响，则可以再次提醒
-//                if (i == 0) {
-//                    updateRemindLater(true);
-//                }
-//                return true;
-//            }
-//            //每次添加一个时间间隔，因为每次循环都会累加
-//            calendar.add(Calendar.MINUTE, interval);
-//        }
-//        return false;
-//    }
-
     public Calendar getNextIntervalAlarm() {
+        currentRepeatNum = 0;
         if (AlarmRepeatMode.isNowNotInRepeatModeDay(alarmRepeatMode)) return null;
 
         Calendar calendar = DateHelper.getCalendarByHourAndMinute(hour, minute);
@@ -115,6 +83,7 @@ public class AlarmSettingInfo implements Parcelable {
         for (int i = 0; i < repeatFrequency; i++) {
             //下一个间隔闹钟时间大于当前时间
             if (calendar.compareTo(nowTime) > 0) {
+                currentRepeatNum = i;
                 return calendar;
             }
             calendar.add(Calendar.MINUTE, interval);
@@ -147,7 +116,7 @@ public class AlarmSettingInfo implements Parcelable {
         return checkedSongPaths.get(index);
     }
 
-    public String getShowTime() {
+    public String getShowedTime() {
         String strMinute = String.valueOf(minute);
         String strHour = String.valueOf(hour);
         if (minute < 10) {

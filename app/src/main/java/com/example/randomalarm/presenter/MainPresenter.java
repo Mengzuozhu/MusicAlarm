@@ -3,7 +3,7 @@ package com.example.randomalarm.presenter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 
-import com.example.randomalarm.alarm.AlarmHandlerClass;
+import com.example.randomalarm.alarm.AlarmMangerClass;
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.model.AlarmSettingModel;
@@ -20,20 +20,21 @@ import java.util.List;
  * description :
  */
 public class MainPresenter implements MainContract.Presenter {
-    private MainContract.View mView;
-    private AlarmHandlerClass alarmHandler;
+    private MainContract.View mainView;
+    private AlarmMangerClass alarmHandler;
 
-    public MainPresenter(MainContract.View mView) {
-        this.mView = mView;
-        alarmHandler = new AlarmHandlerClass(mView.getContext());
-        mView.setPresenter(this);
+    public MainPresenter(MainContract.View mainView) {
+        this.mainView = mainView;
+        alarmHandler = new AlarmMangerClass(mainView.getContext());
+        mainView.setPresenter(this);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public void initOrRefreshAlarm() {
-        List <AlarmSettingInfo> data = AlarmSettingModel.getSortedAlarmInfos();
-        mView.initOrRefreshAlarm(data);
+        List <AlarmSettingInfo> sortedAlarmInfos = AlarmSettingModel.getSortedAlarmInfos();
+        mainView.initOrRefreshAlarm(sortedAlarmInfos);
+        alarmHandler.intiAllAlarms(sortedAlarmInfos);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)

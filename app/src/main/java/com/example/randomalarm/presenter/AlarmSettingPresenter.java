@@ -7,6 +7,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.randomalarm.common.StringHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
 import com.example.randomalarm.setting.AlarmRepeatMode;
 import com.example.randomalarm.setting.AlarmSettingInfo;
@@ -86,7 +87,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     }
 
     private String getIntervalInfo(int interval) {
-        return String.format("%s：%d 分钟", INTERVAL_NAME, interval);
+        return StringHelper.getLocalFormat("%s：%d 分钟", INTERVAL_NAME, interval);
     }
 
     private String getDurationInfo(int duration) {

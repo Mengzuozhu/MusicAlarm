@@ -1,9 +1,5 @@
 package com.example.randomalarm.song;
 
-import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Generated;
-
-@Entity
 public class Song {
 	/**歌曲名*/
 	private String name;
@@ -18,7 +14,6 @@ public class Song {
 	/**时长*/
 	private int duration;
 
-	@Generated(hash = 744490993)
 	public Song(String name, String path, String album, String artist, long size, int duration) {
 		this.name = name;
 		this.path = path;
@@ -27,11 +22,6 @@ public class Song {
 		this.size = size;
 		this.duration = duration;
 	}
-
-	@Generated(hash = 87031450)
-	public Song() {
-	}
-
 
 	public String getName() {
 		return name;

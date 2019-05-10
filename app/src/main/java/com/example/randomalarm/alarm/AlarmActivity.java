@@ -71,7 +71,7 @@ public class AlarmActivity extends AppCompatActivity {
         String message = DateHelper.format(new Date());
         String text = "关闭闹铃";
         AlarmActivity context = AlarmActivity.this;
-        AlarmHandlerClass alarmHandler = new AlarmHandlerClass(context);
+        AlarmMangerClass alarmHandler = new AlarmMangerClass(context);
         AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title).setMessage(message)
                 .setPositiveButton(text, (dialog, which) -> {
                     dismissAndFinish(dialog);

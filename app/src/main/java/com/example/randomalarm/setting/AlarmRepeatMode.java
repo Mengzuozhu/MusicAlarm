@@ -24,6 +24,7 @@ public enum AlarmRepeatMode {
 
     private final int id;
     private final String desc;//中文描述
+    private final static int RECYCLE_DAY = 7;
 
     AlarmRepeatMode(int id, String desc) {
         this.id = id;
@@ -77,12 +78,34 @@ public enum AlarmRepeatMode {
         return true;
     }
 
-    public static void getNextWeekDay(Calendar nextCalendar) {
+    /**
+     * 获取下一个响铃日期
+     * @param nextCalendar
+     * @param alarmRepeatMode
+     * @return
+     */
+    public static Calendar getNextAlarmDate(Calendar nextCalendar, ArrayList <AlarmRepeatMode> alarmRepeatMode) {
         //因为枚举id从0（周一）开始算
         int weekDay = nextCalendar.get(Calendar.DAY_OF_WEEK) - 2;
         //若是负数，则为周日，那么id为6
         if (weekDay < 0) {
             weekDay = 6;
         }
+        int minDay = Integer.MAX_VALUE;
+        //获取响铃星期中与当前星期的最小天数差
+        for (AlarmRepeatMode repeatMode : alarmRepeatMode) {
+            int diff = repeatMode.getId() - weekDay;
+            //若天数差小于0，则添加一个周期7
+            if (diff < 0) {
+                diff += RECYCLE_DAY;
+            }
+            if (diff < minDay) {
+                minDay = diff;
+            }
+        }
+        if (minDay != Integer.MAX_VALUE) {
+            nextCalendar.add(Calendar.DATE, minDay);
+        }
+        return nextCalendar;
     }
 }

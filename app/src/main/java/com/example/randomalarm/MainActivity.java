@@ -2,19 +2,15 @@ package com.example.randomalarm;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.randomalarm.alarm.AlarmCheckService;
-import com.example.randomalarm.alarm.TimeTickReceiver;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.common.MainAdapter;
 import com.example.randomalarm.contract.MainContract;
@@ -25,9 +21,7 @@ import com.example.randomalarm.presenter.MainPresenter;
 import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter = new MainPresenter(this);
         presenter.initOrRefreshAlarm();
         EventBusHelper.register(this);
-//        Intent intent1 = new Intent(this, AlarmCheckService.class);
+//        Intent intent1 = new Intent(this, AlarmInitService.class);
 //        this.startService(intent1);
 
 //        Intent intent1 = new Intent(this, ForegroundService.class);
@@ -88,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     public void showEditActivity() {
         ArrayList <EditItemInfo> editData = new ArrayList <>();
         for (AlarmSettingInfo settingInfo : alarmSettingInfos) {
-            editData.add(new EditItemInfo(settingInfo.getId().intValue(), settingInfo.getShowTime()));
+            editData.add(new EditItemInfo(settingInfo.getId().intValue(), settingInfo.getShowedTime()));
         }
         Intent intent = getNewIntent(AlarmEditActivity.class);
         intent.putParcelableArrayListExtra(AlarmEditActivity.EDIT_DATA, editData);
