@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tv_alarm_time"
+        style="@style/StyleListTextView"
+        android:text="@string/undefined"
+        android:layout_marginTop = "@dimen/list_item_margin_top_2"
+        android:textSize="@dimen/font_23"/>
+
+    <include layout="@layout/circle_switch" />
+
+    <include layout="@layout/list_divider" />
+
+</RelativeLayout>
