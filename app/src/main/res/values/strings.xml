@@ -1,18 +1,17 @@
 <resources>
     <string name="app_name">闹钟</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
-    <string name="title_activity_alarm_setting">AlarmSetting</string>
-    <string name="title_activity_alarm_edit">闹钟编辑</string>
+    <string name="title_activity_alarm_setting">设置闹钟</string>
+    <string name="title_activity_alarm_edit">编辑</string>
     <string name="title_activity_alarm_song">闹钟铃声</string>
     <string name="title_activity_song_picker">添加铃声</string>
     <string name="repeat_name">重复</string>
     <string name="ringing">铃声</string>
-    <string name="db_name">testdb</string>
+    <string name="alarm_setting_db_name">T_ALARM_SETTING</string>
+    <string name="default_alarm_setting_db_name">T_DEFAULT_ALARM_SETTING</string>
     <string name="edit">编辑</string>
-    <string name="menu_setting">设置</string>
+    <string name="menu_default_setting">默认设置</string>
     <string name="complete">完成</string>
-    <string name="title_alarm_edit">删除闹钟</string>
-    <string name="title_alarm_setting">设置闹钟</string>
     <string name="ascend">升序</string>
     <string name="descend">降序</string>
     <string name="undefined">未知</string>
@@ -23,4 +22,5 @@
     <string name="play_mode_single">单曲循环</string>
     <string name="play_mode_order">顺序播放</string>
     <string name="delete_all">全删</string>
+    <string name="title_activity_default_setting">默认配置</string>
 </resources>

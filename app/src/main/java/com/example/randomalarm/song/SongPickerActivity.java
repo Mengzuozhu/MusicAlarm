@@ -5,11 +5,9 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -45,10 +43,7 @@ public class SongPickerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_song_picker);
         ButterKnife.bind(this);
-        Toolbar toolbar = findViewById(R.id.toolbar_song_picker);
-        setSupportActionBar(toolbar);
-        ActionBar actionBar = getSupportActionBar();
-        ViewerHelper.displayHomeAsUp(actionBar);
+        ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
         rbtnSongSelectId = R.id.rbtn_song_select;
         RxPermissions rxPermissions = new RxPermissions(this);

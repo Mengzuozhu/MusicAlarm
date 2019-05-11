@@ -1,7 +1,6 @@
 package com.example.randomalarm.song;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -9,20 +8,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.ForegroundColorSpan;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SearchView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.randomalarm.R;
-import com.example.randomalarm.common.TextQueryHandler;
+import com.example.randomalarm.adapter.SongDragAdapter;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.edit.AlarmEditActivity;
 import com.example.randomalarm.edit.EditItemInfo;
@@ -30,7 +23,6 @@ import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 import com.example.randomalarm.setting.SongPlayedMode;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -45,7 +37,7 @@ import butterknife.ButterKnife;
 public class AlarmSongActivity extends AppCompatActivity {
 
     public static final int ADD_SONG_CODE = 5;
-    public static final String ADD_SONG = "新增铃声";
+    public static final String ADD_SONG = "ADD_SONG";
     @BindView(R.id.rv_alarm_song)
     RecyclerView rvAlarmSong;
     @BindView(R.id.sv_alarm_song)
@@ -53,12 +45,11 @@ public class AlarmSongActivity extends AppCompatActivity {
     String ringName;
     String playModeName;
     ArrayList <SongInfo> songInfos;
-    BaseQuickAdapter adapter;
+    SongDragAdapter adapter;
     AlarmSettingInfo alarmSettingInfo;
-    private Menu currentMenu;
     HashMap <SongPlayedMode, Integer> songPlayedModeAndMenuIds;
     int rbtnSongSelect;
-    HashMap <String, Spannable> nameAndQuerySpans = new HashMap <>();
+    private Menu currentMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,25 +128,14 @@ public class AlarmSongActivity extends AppCompatActivity {
 
     private void initAlarmSong() {
         rbtnSongSelect = R.id.rbtn_song_select;
-        adapter = new BaseQuickAdapter <SongInfo, BaseViewHolder>(R.layout.item_song, songInfos) {
-            @Override
-            protected void convert(BaseViewHolder helper, SongInfo item) {
-                String name = item.getName();
-                if (nameAndQuerySpans.containsKey(name)) {
-                    helper.setText(R.id.tv_song_name, nameAndQuerySpans.get(name));
-                } else {
-                    helper.setText(R.id.tv_song_name, name);
-                }
-                helper.setChecked(rbtnSongSelect, item.isSelect());
-            }
-        };
+        adapter = new SongDragAdapter(songInfos);
+        // 开启拖拽
+        adapter.enableDrag(rvAlarmSong, R.id.tv_song_name);
+        // 开启滑动删除
+        adapter.enableSwipeItem();
+        //支持搜索
+        adapter.setQueryTextListener(svAlarmSong);
         ViewerHelper.setCheckBoxClick(adapter, rbtnSongSelect);
-        new TextQueryHandler(svAlarmSong, adapter, songInfos, nameAndQuerySpans).setQueryTextListener();
-        //长按编辑
-        adapter.setOnItemLongClickListener((adapter, view, position) -> {
-            showEditActivity();
-            return false;
-        });
         rvAlarmSong.setLayoutManager(new LinearLayoutManager(this));
         rvAlarmSong.setAdapter(adapter);
     }
@@ -206,7 +186,6 @@ public class AlarmSongActivity extends AppCompatActivity {
         startActivityForResult(intent, ADD_SONG_CODE);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -219,7 +198,6 @@ public class AlarmSongActivity extends AppCompatActivity {
         }
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     private void saveEdit(Intent data) {
         ArrayList <Integer> deleteNumbers = data.getIntegerArrayListExtra(AlarmEditActivity.DELETE_NUM);
         if (deleteNumbers == null) {

@@ -50,4 +50,16 @@
         <item name="android:iconifiedByDefault">false</item>
         <item name="android:queryHint">请输入搜索内容</item>
     </style>
+
+    <style name="StyleAppBarLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:theme">@style/AppTheme.AppBarOverlay</item>
+    </style>
+
+    <style name="StyleToolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">?attr/actionBarSize</item>
+        <item name="android:background">?attr/colorPrimary</item>
+    </style>
 </resources>

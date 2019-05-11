@@ -11,8 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.example.randomalarm.adapter.MainAdapter;
 import com.example.randomalarm.common.EventBusHelper;
-import com.example.randomalarm.common.MainAdapter;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.edit.AlarmEditActivity;
 import com.example.randomalarm.edit.EditItemInfo;
@@ -20,6 +20,7 @@ import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.presenter.MainPresenter;
 import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.example.randomalarm.setting.DefaultSettingActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -36,9 +37,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     RecyclerView lvAlarm;
     @BindView(R.id.fab_alarm_add)
     FloatingActionButton fabAdd;
-    private MainContract.Presenter presenter;
     MainAdapter mainAdapter;
     List <AlarmSettingInfo> alarmSettingInfos;
+    private MainContract.Presenter presenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,9 +50,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         presenter.initOrRefreshAlarm();
         EventBusHelper.register(this);
 //        Intent intent1 = new Intent(this, AlarmInitService.class);
-//        this.startService(intent1);
-
-//        Intent intent1 = new Intent(this, ForegroundService.class);
 //        this.startService(intent1);
     }
 
@@ -64,15 +62,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_default_setting, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_default_setting) {
+            Intent intent = getNewIntent(DefaultSettingActivity.class);
+            startActivity(intent);
         } else if (id == R.id.action_edit) {
             showEditActivity();
         }
@@ -98,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
         showAlarmSetting(alarmSettingInfo);
 //        this.finish();
+//        NotificationUtils notificationUtils = new NotificationUtils(this);
+//        notificationUtils.sendNotification("测试标题", "测试内容");
     }
 
     public void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {
@@ -151,8 +152,16 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         this.presenter = presenter;
     }
 
-    @Subscribe
-    public void onSaveEditEvent(ArrayList <Integer> deleteNums) {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == AlarmEditActivity.EDIT_SAVE) {
+            onSaveEditEvent(data);
+        }
+    }
+
+    public void onSaveEditEvent(Intent data) {
+        ArrayList <Integer> deleteNums = data.getIntegerArrayListExtra(AlarmEditActivity.DELETE_NUM);
         if (deleteNums == null) {
             return;
         }

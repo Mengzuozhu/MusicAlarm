@@ -18,7 +18,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, this.getString(R.string.db_name));
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, this.getString(R.string.alarm_setting_db_name));
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }

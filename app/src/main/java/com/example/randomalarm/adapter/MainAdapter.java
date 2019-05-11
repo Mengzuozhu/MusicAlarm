@@ -1,4 +1,4 @@
-package com.example.randomalarm.common;
+package com.example.randomalarm.adapter;
 
 import android.support.annotation.Nullable;
 import android.widget.Switch;
@@ -24,8 +24,8 @@ public class MainAdapter extends BaseQuickAdapter <AlarmSettingInfo, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder viewHolder, AlarmSettingInfo alarmSettingInfo) {
-        int swhAlarmStatus = R.id.swh_alarm_status;
-        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowedTime() + " id:" + alarmSettingInfo.getId())
+        int swhAlarmStatus = R.id.swh_status;
+        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowedTime() + " ID:" + alarmSettingInfo.getId())
                 .addOnClickListener(swhAlarmStatus);
         viewHolder.setChecked(swhAlarmStatus, alarmSettingInfo.getIsOpenStatus());
     }

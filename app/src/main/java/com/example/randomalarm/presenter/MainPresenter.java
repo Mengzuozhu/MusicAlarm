@@ -4,14 +4,11 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.example.randomalarm.alarm.AlarmMangerClass;
-import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.model.AlarmSettingModel;
-import com.example.randomalarm.setting.AlarmRepeatMode;
+import com.example.randomalarm.model.DefaultSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
-import com.example.randomalarm.song.SongInfo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,6 +17,7 @@ import java.util.List;
  * description :
  */
 public class MainPresenter implements MainContract.Presenter {
+    private DefaultSettingModel defaultSettingModel;
     private MainContract.View mainView;
     private AlarmMangerClass alarmHandler;
 
@@ -54,13 +52,10 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public AlarmSettingInfo getNewAlarm() {
-        AlarmSettingInfo alarmSettingInfo = new AlarmSettingInfo();
-        alarmSettingInfo.setHour(DateHelper.getNowHour());
-        alarmSettingInfo.setMinute(DateHelper.getNowMinute());
-        alarmSettingInfo.setAlarmRepeatMode(AlarmRepeatMode.toArrayList());
-        ArrayList <SongInfo> songPaths = new ArrayList <>();
-        alarmSettingInfo.setSongInfos(songPaths);
-        return alarmSettingInfo;
+        if (defaultSettingModel == null) {
+            defaultSettingModel = new DefaultSettingModel(mainView.getContext());
+        }
+        return defaultSettingModel.load();
     }
 
 }

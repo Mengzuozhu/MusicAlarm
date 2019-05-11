@@ -4,8 +4,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.randomalarm.common.DateHelper;
-import com.example.randomalarm.song.SongInfoListConverter;
 import com.example.randomalarm.song.SongInfo;
+import com.example.randomalarm.song.SongInfoListConverter;
 
 import org.greenrobot.greendao.annotation.Convert;
 import org.greenrobot.greendao.annotation.Entity;
@@ -25,10 +25,21 @@ import java.util.Random;
 @Entity
 public class AlarmSettingInfo implements Parcelable {
 
+    public static final Creator <AlarmSettingInfo> CREATOR = new Creator <AlarmSettingInfo>() {
+        @Override
+        public AlarmSettingInfo createFromParcel(Parcel source) {
+            return new AlarmSettingInfo(source);
+        }
+
+        @Override
+        public AlarmSettingInfo[] newArray(int size) {
+            return new AlarmSettingInfo[size];
+        }
+    };
     @Id(autoincrement = true)
     private Long id;
-    private int hour;
-    private int minute;
+    private int hour = 8;
+    private int minute = 0;
     private Boolean isOpenStatus = true;
     //闹钟间隔，单位分钟，默认为5
     private int interval = 1;
@@ -36,7 +47,8 @@ public class AlarmSettingInfo implements Parcelable {
     private int repeatFrequency = 3;
     //响铃时长，单位分钟，默认为1
     private int duration = 1;
-
+    //是否振动
+    private boolean isVibrated = true;
     //重复模式
     @Convert(columnType = String.class, converter = AlarmRepeatConverter.class)
     private ArrayList <AlarmRepeatMode> alarmRepeatMode = new ArrayList <>();
@@ -46,15 +58,14 @@ public class AlarmSettingInfo implements Parcelable {
     //播放模式
     @Convert(columnType = Integer.class, converter = SongPlayedMode.SongPlayedModeConverter.class)
     private SongPlayedMode songPlayedMode = SongPlayedMode.random;
-
     @Transient
     private int currentRepeatNum;
     @Transient
     private ArrayList <String> checkedSongPaths = null;
 
-    @Generated(hash = 1196837071)
+    @Generated(hash = 879322034)
     public AlarmSettingInfo(Long id, int hour, int minute, Boolean isOpenStatus, int interval, int repeatFrequency,
-                            int duration, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos,
+                            int duration, boolean isVibrated, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos,
                             SongPlayedMode songPlayedMode) {
         this.id = id;
         this.hour = hour;
@@ -63,6 +74,7 @@ public class AlarmSettingInfo implements Parcelable {
         this.interval = interval;
         this.repeatFrequency = repeatFrequency;
         this.duration = duration;
+        this.isVibrated = isVibrated;
         this.alarmRepeatMode = alarmRepeatMode;
         this.songInfos = songInfos;
         this.songPlayedMode = songPlayedMode;
@@ -70,6 +82,22 @@ public class AlarmSettingInfo implements Parcelable {
 
     @Generated(hash = 664695116)
     public AlarmSettingInfo() {
+    }
+
+    protected AlarmSettingInfo(Parcel in) {
+        this.id = (Long) in.readValue(Long.class.getClassLoader());
+        this.hour = in.readInt();
+        this.minute = in.readInt();
+        this.isOpenStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
+        this.interval = in.readInt();
+        this.repeatFrequency = in.readInt();
+        this.duration = in.readInt();
+        this.isVibrated = in.readByte() != 0;
+        this.alarmRepeatMode = new ArrayList <AlarmRepeatMode>();
+        in.readList(this.alarmRepeatMode, AlarmRepeatMode.class.getClassLoader());
+        this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
+        int tmpSongPlayedMode = in.readInt();
+        this.songPlayedMode = tmpSongPlayedMode == -1 ? null : SongPlayedMode.values()[tmpSongPlayedMode];
     }
 
     public Calendar getNextIntervalAlarm() {
@@ -219,6 +247,14 @@ public class AlarmSettingInfo implements Parcelable {
         this.songPlayedMode = songPlayedMode;
     }
 
+    public boolean getIsVibrated() {
+        return this.isVibrated;
+    }
+
+    public void setIsVibrated(boolean isVibrated) {
+        this.isVibrated = isVibrated;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -233,35 +269,9 @@ public class AlarmSettingInfo implements Parcelable {
         dest.writeInt(this.interval);
         dest.writeInt(this.repeatFrequency);
         dest.writeInt(this.duration);
+        dest.writeByte(this.isVibrated ? (byte) 1 : (byte) 0);
         dest.writeList(this.alarmRepeatMode);
         dest.writeTypedList(this.songInfos);
         dest.writeInt(this.songPlayedMode == null ? -1 : this.songPlayedMode.ordinal());
     }
-
-    protected AlarmSettingInfo(Parcel in) {
-        this.id = (Long) in.readValue(Long.class.getClassLoader());
-        this.hour = in.readInt();
-        this.minute = in.readInt();
-        this.isOpenStatus = (Boolean) in.readValue(Boolean.class.getClassLoader());
-        this.interval = in.readInt();
-        this.repeatFrequency = in.readInt();
-        this.duration = in.readInt();
-        this.alarmRepeatMode = new ArrayList <AlarmRepeatMode>();
-        in.readList(this.alarmRepeatMode, AlarmRepeatMode.class.getClassLoader());
-        this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
-        int tmpSongPlayedMode = in.readInt();
-        this.songPlayedMode = tmpSongPlayedMode == -1 ? null : SongPlayedMode.values()[tmpSongPlayedMode];
-    }
-
-    public static final Creator <AlarmSettingInfo> CREATOR = new Creator <AlarmSettingInfo>() {
-        @Override
-        public AlarmSettingInfo createFromParcel(Parcel source) {
-            return new AlarmSettingInfo(source);
-        }
-
-        @Override
-        public AlarmSettingInfo[] newArray(int size) {
-            return new AlarmSettingInfo[size];
-        }
-    };
 }

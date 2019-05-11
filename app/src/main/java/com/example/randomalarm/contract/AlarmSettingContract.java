@@ -7,6 +7,7 @@ import android.widget.TimePicker;
 
 import com.example.randomalarm.BasePresenter;
 import com.example.randomalarm.BaseView;
+import com.example.randomalarm.adapter.MultipleItem;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public interface AlarmSettingContract {
     }
 
     interface View extends BaseView <AlarmSettingContract.Presenter> {
-        void showAlarm(List <String> data);
+        void showAlarm(List <MultipleItem> data);
 
         Context getContext();
 

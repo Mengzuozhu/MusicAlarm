@@ -5,6 +5,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.ViewerHelper;
@@ -22,6 +23,15 @@ public class AlarmMangerClass {
     public AlarmMangerClass(Context context) {
         alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         this.context = context;
+    }
+
+    private static void setAlarmTime(AlarmManager alarmManager, PendingIntent pi, long timeInMillis) {
+        //如果设置的起始时间小于当前时间，闹钟将会马上被触发
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pi);
+        } else {
+            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, timeInMillis, 100, pi);
+        }
     }
 
     /**
@@ -42,6 +52,12 @@ public class AlarmMangerClass {
             if (sortedAlarmInfo.getIsOpenStatus()) {
                 setNextDayFirstAlarm(sortedAlarmInfo, false);
             }
+        }
+        AlarmManager.AlarmClockInfo nextAlarmClock = alarmManager.getNextAlarmClock();
+        if (nextAlarmClock != null) {
+            Log.w("nextAlarmClock", String.valueOf(nextAlarmClock.getTriggerTime()));
+        } else {
+            Log.w("nextAlarmClock", "null");
         }
     }
 
@@ -122,15 +138,10 @@ public class AlarmMangerClass {
         return PendingIntent.getActivity(context, id.intValue(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    public static void setAlarmTime(AlarmManager alarmManager, PendingIntent pi, long timeInMillis) {
-        //如果设置的起始时间小于当前时间，闹钟将会马上被触发
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, timeInMillis, pi);
-        } else {
-            alarmManager.setWindow(AlarmManager.RTC_WAKEUP, timeInMillis, 100, pi);
-        }
-    }
-
+    /**
+     * 取消闹钟
+     * @param id
+     */
     public void cancelAlarm(Long id) {
         PendingIntent pi = getPendingIntent(id);
         alarmManager.cancel(pi);

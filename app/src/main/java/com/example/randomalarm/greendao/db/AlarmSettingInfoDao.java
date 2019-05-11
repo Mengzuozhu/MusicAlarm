@@ -37,9 +37,10 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         public final static Property Interval = new Property(4, int.class, "interval", false, "INTERVAL");
         public final static Property RepeatFrequency = new Property(5, int.class, "repeatFrequency", false, "REPEAT_FREQUENCY");
         public final static Property Duration = new Property(6, int.class, "duration", false, "DURATION");
-        public final static Property AlarmRepeatMode = new Property(7, String.class, "alarmRepeatMode", false, "ALARM_REPEAT_MODE");
-        public final static Property SongInfos = new Property(8, String.class, "songInfos", false, "SONG_INFOS");
-        public final static Property SongPlayedMode = new Property(9, Integer.class, "songPlayedMode", false, "SONG_PLAYED_MODE");
+        public final static Property IsVibrated = new Property(7, boolean.class, "isVibrated", false, "IS_VIBRATED");
+        public final static Property AlarmRepeatMode = new Property(8, String.class, "alarmRepeatMode", false, "ALARM_REPEAT_MODE");
+        public final static Property SongInfos = new Property(9, String.class, "songInfos", false, "SONG_INFOS");
+        public final static Property SongPlayedMode = new Property(10, Integer.class, "songPlayedMode", false, "SONG_PLAYED_MODE");
     }
 
     private final AlarmRepeatConverter alarmRepeatModeConverter = new AlarmRepeatConverter();
@@ -65,9 +66,10 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
                 "\"INTERVAL\" INTEGER NOT NULL ," + // 4: interval
                 "\"REPEAT_FREQUENCY\" INTEGER NOT NULL ," + // 5: repeatFrequency
                 "\"DURATION\" INTEGER NOT NULL ," + // 6: duration
-                "\"ALARM_REPEAT_MODE\" TEXT," + // 7: alarmRepeatMode
-                "\"SONG_INFOS\" TEXT," + // 8: songInfos
-                "\"SONG_PLAYED_MODE\" INTEGER);"); // 9: songPlayedMode
+                "\"IS_VIBRATED\" INTEGER NOT NULL ," + // 7: isVibrated
+                "\"ALARM_REPEAT_MODE\" TEXT," + // 8: alarmRepeatMode
+                "\"SONG_INFOS\" TEXT," + // 9: songInfos
+                "\"SONG_PLAYED_MODE\" INTEGER);"); // 10: songPlayedMode
     }
 
     /** Drops the underlying database table. */
@@ -94,20 +96,21 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         stmt.bindLong(5, entity.getInterval());
         stmt.bindLong(6, entity.getRepeatFrequency());
         stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(8, entity.getIsVibrated() ? 1L: 0L);
  
         ArrayList alarmRepeatMode = entity.getAlarmRepeatMode();
         if (alarmRepeatMode != null) {
-            stmt.bindString(8, alarmRepeatModeConverter.convertToDatabaseValue(alarmRepeatMode));
+            stmt.bindString(9, alarmRepeatModeConverter.convertToDatabaseValue(alarmRepeatMode));
         }
  
         ArrayList songInfos = entity.getSongInfos();
         if (songInfos != null) {
-            stmt.bindString(9, songInfosConverter.convertToDatabaseValue(songInfos));
+            stmt.bindString(10, songInfosConverter.convertToDatabaseValue(songInfos));
         }
  
         SongPlayedMode songPlayedMode = entity.getSongPlayedMode();
         if (songPlayedMode != null) {
-            stmt.bindLong(10, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
+            stmt.bindLong(11, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
         }
     }
 
@@ -129,20 +132,21 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         stmt.bindLong(5, entity.getInterval());
         stmt.bindLong(6, entity.getRepeatFrequency());
         stmt.bindLong(7, entity.getDuration());
+        stmt.bindLong(8, entity.getIsVibrated() ? 1L: 0L);
  
         ArrayList alarmRepeatMode = entity.getAlarmRepeatMode();
         if (alarmRepeatMode != null) {
-            stmt.bindString(8, alarmRepeatModeConverter.convertToDatabaseValue(alarmRepeatMode));
+            stmt.bindString(9, alarmRepeatModeConverter.convertToDatabaseValue(alarmRepeatMode));
         }
  
         ArrayList songInfos = entity.getSongInfos();
         if (songInfos != null) {
-            stmt.bindString(9, songInfosConverter.convertToDatabaseValue(songInfos));
+            stmt.bindString(10, songInfosConverter.convertToDatabaseValue(songInfos));
         }
  
         SongPlayedMode songPlayedMode = entity.getSongPlayedMode();
         if (songPlayedMode != null) {
-            stmt.bindLong(10, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
+            stmt.bindLong(11, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
         }
     }
 
@@ -161,9 +165,10 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
             cursor.getInt(offset + 4), // interval
             cursor.getInt(offset + 5), // repeatFrequency
             cursor.getInt(offset + 6), // duration
-            cursor.isNull(offset + 7) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 7)), // alarmRepeatMode
-            cursor.isNull(offset + 8) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 8)), // songInfos
-            cursor.isNull(offset + 9) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 9)) // songPlayedMode
+            cursor.getShort(offset + 7) != 0, // isVibrated
+            cursor.isNull(offset + 8) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 8)), // alarmRepeatMode
+            cursor.isNull(offset + 9) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 9)), // songInfos
+            cursor.isNull(offset + 10) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 10)) // songPlayedMode
         );
         return entity;
     }
@@ -177,9 +182,10 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         entity.setInterval(cursor.getInt(offset + 4));
         entity.setRepeatFrequency(cursor.getInt(offset + 5));
         entity.setDuration(cursor.getInt(offset + 6));
-        entity.setAlarmRepeatMode(cursor.isNull(offset + 7) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 7)));
-        entity.setSongInfos(cursor.isNull(offset + 8) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 8)));
-        entity.setSongPlayedMode(cursor.isNull(offset + 9) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 9)));
+        entity.setIsVibrated(cursor.getShort(offset + 7) != 0);
+        entity.setAlarmRepeatMode(cursor.isNull(offset + 8) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 8)));
+        entity.setSongInfos(cursor.isNull(offset + 9) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 9)));
+        entity.setSongPlayedMode(cursor.isNull(offset + 10) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 10)));
      }
     
     @Override

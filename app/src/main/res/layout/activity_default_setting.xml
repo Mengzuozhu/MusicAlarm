@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".edit.AlarmEditActivity">
+    tools:context=".setting.DefaultSettingActivity">
 
-    <include layout="@layout/content_alarm_edit" />
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_default_setting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </android.support.design.widget.CoordinatorLayout>

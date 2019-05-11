@@ -7,6 +7,7 @@ import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.randomalarm.adapter.MultipleItem;
 import com.example.randomalarm.common.StringHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
 import com.example.randomalarm.setting.AlarmRepeatMode;
@@ -28,6 +29,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     private static final String INTERVAL_NAME = "再响间隔";
     private static final String DURATION_NAME = "响铃时长";
     private static final String REPEAT_FREQUENCY_NAME = "重复响铃次数";
+    private static final String VIBRATED = "振动";
     private static final String CANCEL_NAME = "取消";
     private static final String CONFIRM = "确定";
 
@@ -47,20 +49,23 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initAlarm() {
-        List <String> settings = new ArrayList <>();
+        List <MultipleItem> settings = new ArrayList <>();
         TimePicker timePicker = mView.getTimePicker();
-        timePicker.setHour(alarmSettingInfo.getHour());
-        timePicker.setMinute(alarmSettingInfo.getMinute());
+        if (timePicker != null) {
+            timePicker.setHour(alarmSettingInfo.getHour());
+            timePicker.setMinute(alarmSettingInfo.getMinute());
+        }
         songPaths = alarmSettingInfo.getSongInfos();
         alarmRepeatModes = alarmSettingInfo.getAlarmRepeatMode();
         interval = alarmSettingInfo.getInterval();
         duration = alarmSettingInfo.getDuration();
         repeatFrequency = alarmSettingInfo.getRepeatFrequency();
-        settings.add(getRepeatInfo(alarmRepeatModes));
-        settings.add(getSongPlayModeInfo());
-        settings.add(getIntervalInfo(interval));
-        settings.add(getDurationInfo(duration));
-        settings.add(getRepeatFrequencyInfo(repeatFrequency));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatInfo(alarmRepeatModes)));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getSongPlayModeInfo()));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getIntervalInfo(interval)));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
+        settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
         mView.showAlarm(settings);
     }
 
@@ -211,8 +216,10 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     @RequiresApi(api = Build.VERSION_CODES.M)
     public void saveAlarmSetting() {
         TimePicker timePicker = mView.getTimePicker();
-        alarmSettingInfo.setHour(timePicker.getHour());
-        alarmSettingInfo.setMinute(timePicker.getMinute());
+        if (timePicker != null) {
+            alarmSettingInfo.setHour(timePicker.getHour());
+            alarmSettingInfo.setMinute(timePicker.getMinute());
+        }
         alarmSettingInfo.setAlarmRepeatMode(alarmRepeatModes);
         alarmSettingInfo.setSongInfos(songPaths);
         alarmSettingInfo.setInterval(interval);

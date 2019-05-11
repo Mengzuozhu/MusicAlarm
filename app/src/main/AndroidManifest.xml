@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.randomalarm">
-
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <!-- <uses-permission android:channelName="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".MyApplication"
@@ -14,31 +14,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".setting.DefaultSettingActivity"
+            android:label="@string/title_activity_default_setting" />
+        <activity
             android:name=".song.SongPickerActivity"
-            android:label="@string/title_activity_song_picker"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:label="@string/title_activity_song_picker" />
         <activity
             android:name=".edit.AlarmEditActivity"
-            android:label="@string/title_activity_alarm_edit"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_alarm_edit" />
         <activity
             android:name=".song.AlarmSongActivity"
             android:label="@string/title_activity_alarm_song" />
-
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".setting.AlarmSettingActivity"
-            android:label="@string/title_activity_alarm_setting"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/title_activity_alarm_setting" />
         <activity
             android:name=".alarm.AlarmActivity"
             android:launchMode="singleTask" />
@@ -49,12 +46,12 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </receiver>
 
         <service android:name=".alarm.AlarmInitService" />
-        <service android:name=".alarm.ForegroundService" />
     </application>
 
 </manifest>
