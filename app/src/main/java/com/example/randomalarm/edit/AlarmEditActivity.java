@@ -17,6 +17,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import tyrantgit.explosionfield.ExplosionField;
 
 public class AlarmEditActivity extends AppCompatActivity {
 
@@ -28,6 +29,7 @@ public class AlarmEditActivity extends AppCompatActivity {
     ArrayList <Integer> deleteData;
     ArrayList <EditItemInfo> editData;
     BaseQuickAdapter adapter;
+    ExplosionField mExplosionField;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class AlarmEditActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
+        mExplosionField = ExplosionField.attach2Window(this);
         Intent intent = getIntent();
         editData = intent.getParcelableArrayListExtra(EDIT_DATA);
         deleteData = new ArrayList <>();
@@ -98,6 +101,8 @@ public class AlarmEditActivity extends AppCompatActivity {
             if (item == null) {
                 return;
             }
+            mExplosionField.explode(view);
+            view.setOnClickListener(null);
             deleteData.add(item.getId());
             adapter1.remove(position);
         });
