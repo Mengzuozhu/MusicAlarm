@@ -1,17 +1,17 @@
 package com.example.randomalarm.alarm;
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
+import android.app.Service;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.WindowManager;
 
-import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.R;
+import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
@@ -23,9 +23,11 @@ import java.util.TimerTask;
 public class AlarmActivity extends AppCompatActivity {
 
     public static final String ALARM_ID = "ALARM_ID";
+    private Vibrator vibrator;
     private MediaPlayer mediaPlayer;
     private Timer timer;
     private AlarmSettingInfo alarmSettingInfo;
+    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,8 @@ public class AlarmActivity extends AppCompatActivity {
         if (alarmId == -1) {
             return;
         }
+        vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
         alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(alarmId);
-        Log.w("alarmId", String.valueOf(alarmId));
         playMedia();
     }
 
@@ -63,7 +65,15 @@ public class AlarmActivity extends AppCompatActivity {
             }
         });
         mediaPlayer.start();
+        vibrateOrNot();
         showDialog(title);
+    }
+
+    public void vibrateOrNot() {
+        if (alarmSettingInfo.getIsVibrated() && vibrator.hasVibrator()) {
+            vibrator.cancel();
+            vibrator.vibrate(new long[]{200, 100}, 0);
+        }
     }
 
     public void showDialog(String title) {
@@ -72,42 +82,37 @@ public class AlarmActivity extends AppCompatActivity {
         String text = "关闭闹铃";
         AlarmActivity context = AlarmActivity.this;
         AlarmMangerClass alarmHandler = new AlarmMangerClass(context);
-        AlertDialog alertDialog = new AlertDialog.Builder(context).setTitle(title).setMessage(message)
+        alertDialog = new AlertDialog.Builder(context).setTitle(title).setMessage(message)
                 .setPositiveButton(text, (dialog, which) -> {
-                    dismissAndFinish(dialog);
                     //设置下一天的闹钟
-                    alarmHandler.setNextDayFirstAlarm(alarmSettingInfo,false);
+                    alarmHandler.setNextDayFirstAlarm(alarmSettingInfo, false);
+                    this.finish();
                 }).setNegativeButton("稍后提醒", (dialog, which) -> {
-                    dismissAndFinish(dialog);
                     alarmHandler.setNextIntervalAlarm(alarmSettingInfo);
+                    this.finish();
                 }).create();
         alertDialog.show();
-        closeInTime(alertDialog, alarmSettingInfo.getDuration());
+        closeInTime(alarmSettingInfo.getDuration());
     }
 
-    public void dismissAndFinish(DialogInterface dialog) {
-        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
-            mediaPlayer.stop();
-        }
-        dialog.dismiss();
+    public void thisFinish() {
         this.finish();
     }
 
-    public void closeInTime(AlertDialog alertDialog, int delayMinute) {
+    public void closeInTime(int delayMinute) {
         //分钟转为毫秒
         delayMinute = delayMinute * DateHelper.MINUTE_TO_MILLIS;
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                dismissAndFinish(alertDialog);
+                thisFinish();
             }
         }, delayMinute);
     }
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
@@ -116,5 +121,12 @@ public class AlarmActivity extends AppCompatActivity {
             timer.cancel();
             timer = null;
         }
+        if (alertDialog != null) {
+            alertDialog.dismiss();
+        }
+        if (vibrator != null) {
+            vibrator.cancel();
+        }
+        super.onDestroy();
     }
 }

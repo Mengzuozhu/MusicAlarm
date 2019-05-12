@@ -97,7 +97,7 @@ public class FileManager {
                 if (indexOf > 0) {
                     name = name.substring(0, indexOf);
                 }
-                SongInfo song = new SongInfo(name, path, true);
+                SongInfo song = new SongInfo(name, path, false);
                 songs.add(song);
             }
 

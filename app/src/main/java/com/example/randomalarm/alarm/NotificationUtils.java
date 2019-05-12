@@ -54,10 +54,12 @@ public class NotificationUtils extends ContextWrapper {
                 .setAutoCancel(true);
     }
 
-    public void sendNotification(String title, String content) {
+    public void sendNotification(String title, String content,long when) {
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannel();
-            Notification notification = getChannelNotification(title, content).build();
+            Notification.Builder builder = getChannelNotification(title, content);
+            builder.setWhen(when);
+            Notification notification = builder.build();
             getManager().notify(1, notification);
         } else {
             Notification notification = getNotification_25(title, content).build();

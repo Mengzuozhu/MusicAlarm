@@ -15,7 +15,6 @@ public class AlarmNotification {
     }
 
     public void show(String content) {
-        notificationUtils.sendNotification("闹钟提醒", content);
     }
 
     private void cancel() {

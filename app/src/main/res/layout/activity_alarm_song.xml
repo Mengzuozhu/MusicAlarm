@@ -9,7 +9,7 @@
     <include layout="@layout/content_alarm_song" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_song_add"
+        android:id="@+id/fab_song_scroll_first"
         style="@style/StyleFab"
         android:onClick="addSong_onClick"
         android:src="@mipmap/add"

@@ -8,21 +8,18 @@ import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Spannable;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.SearchView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.randomalarm.R;
-import com.example.randomalarm.common.TextQueryHandler;
+import com.example.randomalarm.adapter.SongInfoAdapter;
 import com.example.randomalarm.common.ViewerHelper;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,10 +30,9 @@ public class SongPickerActivity extends AppCompatActivity {
     RecyclerView rvSongFile;
     @BindView(R.id.sv_song_file)
     SearchView svSongFile;
-    BaseQuickAdapter adapter;
+    SongInfoAdapter adapter;
     ArrayList <SongInfo> songFiles;
-    private int rbtnSongSelectId;
-    HashMap <String, Spannable> nameAndQuerySpans = new HashMap <>();
+    private int chbSongSelectId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +41,7 @@ public class SongPickerActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
-        rbtnSongSelectId = R.id.rbtn_song_select;
+        chbSongSelectId = R.id.chb_song_select;
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
             if (granted) {
@@ -73,19 +69,17 @@ public class SongPickerActivity extends AppCompatActivity {
                 this.finish();
                 return true;
             case R.id.action_select:
-                selectAll();
+                adapter.selectAll(rvSongFile);
                 break;
             case R.id.action_save:
                 save();
                 this.finish();
                 return true;
             case R.id.sort_ascend:
-                songFiles.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-                adapter.notifyDataSetChanged();
+                adapter.sort(true);
                 break;
             case R.id.sort_descend:
-                songFiles.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-                adapter.notifyDataSetChanged();
+                adapter.sort(false);
                 break;
 
         }
@@ -94,19 +88,8 @@ public class SongPickerActivity extends AppCompatActivity {
 
     public void initAlarmSong() {
         songFiles = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
-        adapter = new BaseQuickAdapter <SongInfo, BaseViewHolder>(R.layout.item_song, songFiles) {
-            @Override
-            protected void convert(BaseViewHolder helper, SongInfo item) {
-                String name = item.getName();
-                if (nameAndQuerySpans.containsKey(name)) {
-                    helper.setText(R.id.tv_song_name, nameAndQuerySpans.get(name));
-                } else {
-                    helper.setText(R.id.tv_song_name, name);
-                }
-            }
-        };
-        ViewerHelper.setCheckBoxClick(adapter, rbtnSongSelectId);
-        new TextQueryHandler(svSongFile, adapter, songFiles, nameAndQuerySpans).setQueryTextListener();
+        adapter = new SongInfoAdapter(songFiles);
+        adapter.setQueryTextListener(svSongFile);
         rvSongFile.setLayoutManager(new LinearLayoutManager(this));
         rvSongFile.setAdapter(adapter);
     }
@@ -121,26 +104,25 @@ public class SongPickerActivity extends AppCompatActivity {
         setResult(AlarmSongActivity.ADD_SONG_CODE, intent);
     }
 
-    /**
-     * 全选
-     */
-    private void selectAll() {
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            CheckBox checkBox = (CheckBox) adapter.getViewByPosition(rvSongFile, i, rbtnSongSelectId);
-            if (checkBox != null) {
-                checkBox.setChecked(true);
-            }
-        }
-    }
-
     public ArrayList <SongInfo> getCheckedSongInfos() {
         ArrayList <SongInfo> newSongPaths = new ArrayList <>();
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            CheckBox checkBox = (CheckBox) adapter.getViewByPosition(rvSongFile, i, rbtnSongSelectId);
-            if (checkBox != null && checkBox.isChecked()) {
-                newSongPaths.add(songFiles.get(i));
+//        for (int i = 0; i < adapter.getItemCount(); i++) {
+//            CheckBox checkBox = (CheckBox) adapter.getViewByPosition(rvSongFile, i, chbSongSelectId);
+//            if (checkBox != null && checkBox.isChecked()) {
+//                newSongPaths.add(songFiles.get(i));
+//            }
+//        }
+        for (SongInfo songFile : songFiles) {
+            if (songFile.isSelect()) {
+                newSongPaths.add(songFile);
             }
         }
         return newSongPaths;
+    }
+
+    public void scrollToFirstSong_onClick(View view) {
+        if (adapter.getItemCount() > 0) {
+            rvSongFile.scrollToPosition(0);
+        }
     }
 }

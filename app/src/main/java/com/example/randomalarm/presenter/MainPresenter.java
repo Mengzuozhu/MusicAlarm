@@ -4,6 +4,7 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.example.randomalarm.alarm.AlarmMangerClass;
+import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.model.DefaultSettingModel;
@@ -55,7 +56,11 @@ public class MainPresenter implements MainContract.Presenter {
         if (defaultSettingModel == null) {
             defaultSettingModel = new DefaultSettingModel(mainView.getContext());
         }
-        return defaultSettingModel.load();
+
+        AlarmSettingInfo alarmSettingInfo = defaultSettingModel.loadDefaultAlarmSetting();
+        //使ID自增
+        alarmSettingInfo.setId(new AlarmSettingInfo().getId());
+        return alarmSettingInfo;
     }
 
 }

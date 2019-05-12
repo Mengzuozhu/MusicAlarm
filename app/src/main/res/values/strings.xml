@@ -23,4 +23,5 @@
     <string name="play_mode_order">顺序播放</string>
     <string name="delete_all">全删</string>
     <string name="title_activity_default_setting">默认配置</string>
+    <string name="title_search">搜索</string>
 </resources>

@@ -82,6 +82,7 @@ public class AlarmMangerClass {
         }
         nextCalendar = AlarmRepeatMode.getNextAlarmDate(nextCalendar, alarmSettingInfo.getAlarmRepeatMode());
         setAlarm(alarmSettingInfo, nextCalendar, isShowRemind);
+//        setNotification(nextCalendar);
     }
 
     /**
@@ -138,8 +139,20 @@ public class AlarmMangerClass {
         return PendingIntent.getActivity(context, id.intValue(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    private void setNotification(Calendar nextCalendar) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(nextCalendar.getTimeInMillis());
+//        calendar.add(Calendar.HOUR_OF_DAY, 1);
+        calendar.add(Calendar.SECOND, 15);
+        if (calendar.compareTo(DateHelper.getNowTime()) > 0) {
+            NotificationUtils notificationUtils = new NotificationUtils(context);
+            notificationUtils.sendNotification("闹钟提醒", "下一个闹钟将于1小时内响起", calendar.getTimeInMillis());
+        }
+    }
+
     /**
      * 取消闹钟
+     *
      * @param id
      */
     public void cancelAlarm(Long id) {

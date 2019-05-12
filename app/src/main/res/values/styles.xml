@@ -17,6 +17,12 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <!--标题与NavigationIcon的距离-->
+    <style name="Toolbar.MyStyle" parent="Base.Widget.AppCompat.Toolbar">
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
     <style name="StyleListTextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">@dimen/list_item_height_40</item>
@@ -47,7 +53,7 @@
     <style name="StyleSearchView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:iconifiedByDefault">false</item>
+        <item name="android:iconifiedByDefault">true</item>
         <item name="android:queryHint">请输入搜索内容</item>
     </style>
 

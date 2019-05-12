@@ -31,22 +31,18 @@ public class DefaultSettingModel {
         alarmSettingInfoDao = daoSession.getAlarmSettingInfoDao();
     }
 
-    public AlarmSettingInfo load() {
+    public AlarmSettingInfo loadDefaultAlarmSetting() {
         List <AlarmSettingInfo> data = daoSession.loadAll(AlarmSettingInfo.class);
+        AlarmSettingInfo defaultSetting;
         if (data != null && data.size() > 0) {
-            return data.get(0);
+            defaultSetting = data.get(0);
         } else {
-            return getDefaultAlarmSetting();
+            defaultSetting = new AlarmSettingInfo();
+            defaultSetting.setAlarmRepeatMode(AlarmRepeatMode.toArrayList());
         }
-    }
-
-    private AlarmSettingInfo getDefaultAlarmSetting() {
-        AlarmSettingInfo alarmSettingInfo = new AlarmSettingInfo();
-        alarmSettingInfo.setId(0L);
-        alarmSettingInfo.setHour(DateHelper.getNowHour());
-        alarmSettingInfo.setMinute(DateHelper.getNowMinute());
-        alarmSettingInfo.setAlarmRepeatMode(AlarmRepeatMode.toArrayList());
-        return alarmSettingInfo;
+        defaultSetting.setHour(DateHelper.getNowHour());
+        defaultSetting.setMinute(DateHelper.getNowMinute());
+        return defaultSetting;
     }
 
     public void insertOrReplace(AlarmSettingInfo alarmSettingInfo) {

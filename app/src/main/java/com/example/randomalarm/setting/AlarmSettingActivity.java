@@ -6,24 +6,17 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.randomalarm.R;
-import com.example.randomalarm.adapter.MultipleItem;
-import com.example.randomalarm.adapter.MultipleItemQuickAdapter;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
 import com.example.randomalarm.presenter.AlarmSettingPresenter;
 import com.example.randomalarm.song.AlarmSongActivity;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,18 +80,6 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
     }
 
     @Override
-    public void showAlarm(List <MultipleItem> settings) {
-        final int tvSettingName = R.id.tv_setting_name;
-        MultipleItemQuickAdapter adapter = new MultipleItemQuickAdapter(settings);
-        adapter.setOnItemClickListener((adapter1, view, position) -> {
-            TextView textView = view.findViewById(tvSettingName);
-            presenter.showSetting(position, textView);
-        });
-        rvSetting.setLayoutManager(new LinearLayoutManager(this));
-        rvSetting.setAdapter(adapter);
-    }
-
-    @Override
     public TimePicker getTimePicker() {
         return timePicker;
     }
@@ -108,6 +89,11 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
         Intent intent = getNewIntent(AlarmSongActivity.class);
         intent.putExtra(ringName, alarmSettingInfo);
         startActivityForResult(intent, RING_SET);
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return rvSetting;
     }
 
     public Intent getNewIntent(Class <?> cls) {

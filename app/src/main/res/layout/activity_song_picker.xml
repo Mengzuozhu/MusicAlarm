@@ -3,8 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".song.SongPickerActivity">
 
     <include layout="@layout/content_song_picker" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_song_scroll_first"
+        style="@style/StyleFab"
+        android:onClick="scrollToFirstSong_onClick"
+        android:src="@mipmap/go_top"
+        app:backgroundTint="@color/colorGray" />
 </android.support.design.widget.CoordinatorLayout>

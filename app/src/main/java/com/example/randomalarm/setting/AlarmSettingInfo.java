@@ -36,13 +36,14 @@ public class AlarmSettingInfo implements Parcelable {
             return new AlarmSettingInfo[size];
         }
     };
+
     @Id(autoincrement = true)
     private Long id;
     private int hour = 8;
     private int minute = 0;
     private Boolean isOpenStatus = true;
     //闹钟间隔，单位分钟，默认为5
-    private int interval = 1;
+    private int interval = 5;
     //重复响铃次数
     private int repeatFrequency = 3;
     //响铃时长，单位分钟，默认为1

@@ -4,25 +4,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.randomalarm.R;
-import com.example.randomalarm.adapter.MultipleItem;
-import com.example.randomalarm.adapter.MultipleItemQuickAdapter;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
 import com.example.randomalarm.model.DefaultSettingModel;
 import com.example.randomalarm.presenter.AlarmSettingPresenter;
 import com.example.randomalarm.song.AlarmSongActivity;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -44,7 +36,7 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
 
         ringName = this.getString(R.string.ringing);
         defaultSettingModel = new DefaultSettingModel(this);
-        presenter = new AlarmSettingPresenter(this, defaultSettingModel.load());
+        presenter = new AlarmSettingPresenter(this, defaultSettingModel.loadDefaultAlarmSetting());
         presenter.initAlarm();
     }
 
@@ -77,18 +69,6 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
     }
 
     @Override
-    public void showAlarm(List <MultipleItem> settings) {
-        final int tvSettingName = R.id.tv_setting_name;
-        MultipleItemQuickAdapter adapter = new MultipleItemQuickAdapter(settings);
-        rvDefaultSetting.setLayoutManager(new LinearLayoutManager(this));
-        rvDefaultSetting.setAdapter(adapter);
-        adapter.setOnItemClickListener((adapter1, view, position) -> {
-            TextView textView = view.findViewById(tvSettingName);
-            presenter.showSetting(position, textView);
-        });
-    }
-
-    @Override
     public TimePicker getTimePicker() {
         return null;
     }
@@ -98,6 +78,11 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
         Intent intent = getNewIntent(AlarmSongActivity.class);
         intent.putExtra(ringName, alarmSettingInfo);
         startActivityForResult(intent, AlarmSettingActivity.RING_SET);
+    }
+
+    @Override
+    public RecyclerView getRecyclerView() {
+        return rvDefaultSetting;
     }
 
     public Intent getNewIntent(Class <?> cls) {

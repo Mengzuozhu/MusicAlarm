@@ -3,11 +3,16 @@ package com.example.randomalarm.presenter;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.widget.NumberPicker;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import com.example.randomalarm.R;
 import com.example.randomalarm.adapter.MultipleItem;
+import com.example.randomalarm.adapter.MultipleItemQuickAdapter;
 import com.example.randomalarm.common.StringHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
 import com.example.randomalarm.setting.AlarmRepeatMode;
@@ -32,8 +37,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     private static final String VIBRATED = "振动";
     private static final String CANCEL_NAME = "取消";
     private static final String CONFIRM = "确定";
-
-    private AlarmSettingContract.View mView;
+    private MultipleItemQuickAdapter multipleItemAdapter;
+    private AlarmSettingContract.View view;
     private AlarmSettingInfo alarmSettingInfo;
     private ArrayList <SongInfo> songPaths;
     private ArrayList <AlarmRepeatMode> alarmRepeatModes;
@@ -41,8 +46,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     private int interval;
     private int duration;
 
-    public AlarmSettingPresenter(AlarmSettingContract.View mView, AlarmSettingInfo alarmSettingInfo) {
-        this.mView = mView;
+    public AlarmSettingPresenter(AlarmSettingContract.View view, AlarmSettingInfo alarmSettingInfo) {
+        this.view = view;
         this.alarmSettingInfo = alarmSettingInfo;
     }
 
@@ -50,7 +55,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     @Override
     public void initAlarm() {
         List <MultipleItem> settings = new ArrayList <>();
-        TimePicker timePicker = mView.getTimePicker();
+        TimePicker timePicker = view.getTimePicker();
         if (timePicker != null) {
             timePicker.setHour(alarmSettingInfo.getHour());
             timePicker.setMinute(alarmSettingInfo.getMinute());
@@ -66,7 +71,20 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
         settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
-        mView.showAlarm(settings);
+//        view.showAlarm(settings);
+        initAdapter(settings);
+    }
+
+    private void initAdapter(List <MultipleItem> settings) {
+        final int tvSettingName = R.id.tv_setting_name;
+        multipleItemAdapter = new MultipleItemQuickAdapter(settings);
+        multipleItemAdapter.setOnItemClickListener((adapter1, view, position) -> {
+            TextView textView = view.findViewById(tvSettingName);
+            showSetting(position, textView);
+        });
+        RecyclerView recyclerView = view.getRecyclerView();
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        recyclerView.setAdapter(multipleItemAdapter);
     }
 
     private String getRepeatInfo(ArrayList <AlarmRepeatMode> repeat) {
@@ -96,18 +114,18 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     }
 
     private String getDurationInfo(int duration) {
-        return String.format("%s：%d 分钟", DURATION_NAME, duration);
+        return StringHelper.getLocalFormat("%s：%d 分钟", DURATION_NAME, duration);
     }
 
     private String getRepeatFrequencyInfo(int repeatNumber) {
-        return String.format("%s：%d", REPEAT_FREQUENCY_NAME, repeatNumber);
+        return StringHelper.getLocalFormat("%s：%d", REPEAT_FREQUENCY_NAME, repeatNumber);
     }
 
     private String[] getIntervals() {
         int len = 6;
         String[] intervals = new String[len];
         for (int i = 0; i < intervals.length; i++) {
-            intervals[i] = String.format("%d 分钟", getInterval(i));
+            intervals[i] = StringHelper.getLocalFormat("%d 分钟", getInterval(i));
         }
         return intervals;
     }
@@ -154,7 +172,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     }
 
     private AlertDialog.Builder getAlertDialog(String title) {
-        return new AlertDialog.Builder(mView.getContext())
+        return new AlertDialog.Builder(view.getContext())
                 .setTitle(title)
                 .setNegativeButton(CANCEL_NAME, (dialog, which) -> dialog.dismiss());
     }
@@ -184,7 +202,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     }
 
     private NumberPicker getNumberPicker(int min, int max, int value) {
-        NumberPicker numberPicker = new NumberPicker(mView.getContext());
+        NumberPicker numberPicker = new NumberPicker(view.getContext());
         numberPicker.setMinValue(min);
         numberPicker.setMaxValue(max);
         numberPicker.setValue(value);
@@ -213,9 +231,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     }
 
     @Override
-    @RequiresApi(api = Build.VERSION_CODES.M)
     public void saveAlarmSetting() {
-        TimePicker timePicker = mView.getTimePicker();
+        TimePicker timePicker = view.getTimePicker();
         if (timePicker != null) {
             alarmSettingInfo.setHour(timePicker.getHour());
             alarmSettingInfo.setMinute(timePicker.getMinute());
@@ -226,12 +243,21 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         alarmSettingInfo.setDuration(duration);
         alarmSettingInfo.setRepeatFrequency(repeatFrequency);
         alarmSettingInfo.setIsOpenStatus(true);
-        mView.save(alarmSettingInfo);
+        setIsVibrated();
+        view.save(alarmSettingInfo);
+    }
+
+    private void setIsVibrated() {
+        int position = multipleItemAdapter.getData().size() - 1;
+        Switch aSwitch = (Switch) multipleItemAdapter.getViewByPosition(view.getRecyclerView(), position, R.id.swh_status);
+        if (aSwitch != null) {
+            alarmSettingInfo.setIsVibrated(aSwitch.isChecked());
+        }
     }
 
     @Override
     public void showSongPathsSetting() {
-        mView.showSongPathsSetting(alarmSettingInfo);
+        view.showSongPathsSetting(alarmSettingInfo);
     }
 
     @Override

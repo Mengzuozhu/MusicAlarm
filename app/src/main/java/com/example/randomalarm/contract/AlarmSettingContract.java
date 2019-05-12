@@ -1,17 +1,13 @@
 package com.example.randomalarm.contract;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.example.randomalarm.BasePresenter;
 import com.example.randomalarm.BaseView;
-import com.example.randomalarm.adapter.MultipleItem;
 import com.example.randomalarm.setting.AlarmSettingInfo;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * author : Mzz
@@ -23,7 +19,6 @@ public interface AlarmSettingContract {
     }
 
     interface View extends BaseView <AlarmSettingContract.Presenter> {
-        void showAlarm(List <MultipleItem> data);
 
         Context getContext();
 
@@ -33,6 +28,7 @@ public interface AlarmSettingContract {
 
         void showSongPathsSetting(AlarmSettingInfo alarmSettingInfo);
 
+        RecyclerView getRecyclerView();
     }
 
     interface Presenter extends BasePresenter {

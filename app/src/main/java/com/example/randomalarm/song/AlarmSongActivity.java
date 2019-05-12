@@ -15,7 +15,7 @@ import android.widget.CheckBox;
 import android.widget.SearchView;
 
 import com.example.randomalarm.R;
-import com.example.randomalarm.adapter.SongDragAdapter;
+import com.example.randomalarm.adapter.SongInfoAdapter;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.edit.AlarmEditActivity;
 import com.example.randomalarm.edit.EditItemInfo;
@@ -45,7 +45,7 @@ public class AlarmSongActivity extends AppCompatActivity {
     String ringName;
     String playModeName;
     ArrayList <SongInfo> songInfos;
-    SongDragAdapter adapter;
+    SongInfoAdapter adapter;
     AlarmSettingInfo alarmSettingInfo;
     HashMap <SongPlayedMode, Integer> songPlayedModeAndMenuIds;
     int rbtnSongSelect;
@@ -72,6 +72,7 @@ public class AlarmSongActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         currentMenu = menu;
         getMenuInflater().inflate(R.menu.menu_save, menu);
+        getMenuInflater().inflate(R.menu.menu_select, menu);
         getMenuInflater().inflate(R.menu.menu_play_mode, menu);
         getMenuInflater().inflate(R.menu.menu_sort, menu);
         getMenuInflater().inflate(R.menu.menu_edit, menu);
@@ -94,7 +95,6 @@ public class AlarmSongActivity extends AppCompatActivity {
         songPlayedModeAndMenuIds.put(SongPlayedMode.order, R.id.mode_order);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -102,17 +102,18 @@ public class AlarmSongActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
+            case R.id.action_select:
+                adapter.selectAll(rvAlarmSong);
+                break;
             case R.id.action_save:
                 save();
                 this.finish();
                 return true;
             case R.id.sort_ascend:
-                songInfos.sort((o1, o2) -> o1.getName().compareTo(o2.getName()));
-                adapter.notifyDataSetChanged();
+                adapter.sort(true);
                 break;
             case R.id.sort_descend:
-                songInfos.sort((o1, o2) -> o2.getName().compareTo(o1.getName()));
-                adapter.notifyDataSetChanged();
+                adapter.sort(false);
                 break;
             case R.id.action_edit:
                 showEditActivity();
@@ -127,15 +128,14 @@ public class AlarmSongActivity extends AppCompatActivity {
     }
 
     private void initAlarmSong() {
-        rbtnSongSelect = R.id.rbtn_song_select;
-        adapter = new SongDragAdapter(songInfos);
+        rbtnSongSelect = R.id.chb_song_select;
+        adapter = new SongInfoAdapter(songInfos);
         // 开启拖拽
         adapter.enableDrag(rvAlarmSong, R.id.tv_song_name);
         // 开启滑动删除
         adapter.enableSwipeItem();
         //支持搜索
         adapter.setQueryTextListener(svAlarmSong);
-        ViewerHelper.setCheckBoxClick(adapter, rbtnSongSelect);
         rvAlarmSong.setLayoutManager(new LinearLayoutManager(this));
         rvAlarmSong.setAdapter(adapter);
     }
