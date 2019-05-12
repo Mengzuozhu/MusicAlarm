@@ -8,7 +8,7 @@
         style="@style/StyleListTextView"
         android:text="@string/undefined"
         android:layout_marginTop = "@dimen/list_item_margin_top_2"
-        android:textSize="@dimen/font_23"/>
+        android:textSize="@dimen/font_25"/>
 
     <include layout="@layout/circle_switch" />
 

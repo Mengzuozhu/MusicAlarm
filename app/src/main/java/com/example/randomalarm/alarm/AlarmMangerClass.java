@@ -122,7 +122,7 @@ public class AlarmMangerClass {
         long nowMillis = System.currentTimeMillis();
         long diffMillis = nextTimeInMillis - nowMillis;
         if (isShowRemind) {
-            String diff = String.format("%s后响铃", DateHelper.getDiffTime(diffMillis));
+            String diff = DateHelper.getAlarmRemainedTime(diffMillis);
             ViewerHelper.showToast(context, diff);
         }
         PendingIntent pi = getPendingIntent(alarmSettingInfo.getId());
@@ -159,5 +159,6 @@ public class AlarmMangerClass {
         PendingIntent pi = getPendingIntent(id);
         alarmManager.cancel(pi);
     }
+
 
 }

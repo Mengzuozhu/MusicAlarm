@@ -39,13 +39,20 @@
         <item>#D53E4F</item>
         <item>#F46D43</item>
         <item>#FDAE61</item>
-        <item>#FEE08B</item>
-        <item>#FFFFBF</item>
-        <item>#E6F598</item>
         <item>#ABDDA4</item>
         <item>#66C2A5</item>
         <item>#3288BD</item>
         <item>#5E4FA2</item>
+        <item>#CDC9C9</item>
+        <item>#8B8989</item>
+        <item>#1E90FF</item>
+        <item>#63B8FF</item>
+        <item>#000000</item>
+        <item>#FFD700</item>
+        <item>#FFB90F</item>
+        <item>#FFC125</item>
+        <item>#CDAD00</item>
+        <item>#FFFFFF</item>
     </string-array>
 
     <string-array name="BallWaveAnimations">

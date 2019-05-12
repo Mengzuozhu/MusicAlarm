@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">闹钟</string>
+    <string name="app_name">音乐闹钟</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
     <string name="title_activity_alarm_setting">设置闹钟</string>
     <string name="title_activity_alarm_edit">编辑</string>

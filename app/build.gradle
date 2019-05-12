@@ -3,6 +3,14 @@ apply plugin: 'com.android.application'
 apply plugin: 'org.greenrobot.greendao'
 
 android {
+    signingConfigs {
+        realse {
+            storeFile file('D:\\software\\Java\\android\\KeyStore\\randomAlarm.jks')
+            storePassword 'mzzalarm'
+            keyAlias = 'alarm'
+            keyPassword 'mzzalarm'
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.example.randomalarm"
@@ -16,6 +24,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.realse
         }
     }
     compileOptions {
@@ -31,6 +40,13 @@ android {
         //这就是我们上面说到的自定义生成数据库文件的目录了，可以将生成的文件放到我们的java目录中，而不是build中，这样就不用额外的设置资源目录了
         //工程路径
         targetGenDir 'src/main/java'
+    }
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                //修改apk文件名
+                outputFileName = "音乐闹钟-v${variant.versionName}.apk"
+            }
     }
 }
 
@@ -53,6 +69,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
     implementation 'org.greenrobot:eventbus:3.1.1'
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
-    compile 'com.github.glomadrian:Grav:1.1'
-    compile 'tyrantgit:explosionfield:1.0.1'
+    implementation 'com.github.glomadrian:Grav:1.1'
+    implementation 'tyrantgit:explosionfield:1.0.1'
 }

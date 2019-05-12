@@ -6,9 +6,9 @@ import java.util.Date;
 import java.util.Locale;
 
 public class DateHelper {
-    private static SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINA);//设置日期格式
     //分钟转为毫秒
-    public  final static  int MINUTE_TO_MILLIS = 60000;
+    public final static int MINUTE_TO_MILLIS = 60000;
+    private static SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.CHINA);//设置日期格式
 
     public static String format(Date date) {
         return df.format(date);
@@ -27,11 +27,12 @@ public class DateHelper {
     }
 
     /**
-     * 获取时间差距
+     * 获取闹钟剩余时间
+     *
      * @param time
      * @return
      */
-    public static String getDiffTime(long time) {
+    public static String getAlarmRemainedTime(long time) {
         int millisToHour = MINUTE_TO_MILLIS * 60;
         int millisToDay = millisToHour * 24;
         long days = time / millisToDay;
@@ -40,16 +41,19 @@ public class DateHelper {
         long remainMinute = remainHour - hours * millisToHour;
         long minutes = remainMinute / MINUTE_TO_MILLIS;
         String diffTime = "";
-        if (days > 0) {
-            diffTime += StringHelper.getLocalFormat("%d天", days);
-        }
-        if (hours > 0) {
-            diffTime += StringHelper.getLocalFormat("%d小时", hours);
-        }
-        if (minutes >= 0) {
-            diffTime += StringHelper.getLocalFormat("%d分钟", minutes);
+        if (minutes <= 0 && (hours <= 0 && (days <= 0))) {
+            diffTime = "1分钟内响铃";
         } else {
-            diffTime = "";
+            if (days > 0) {
+                diffTime += StringHelper.getLocalFormat("%d天", days);
+            }
+            if (hours > 0) {
+                diffTime += StringHelper.getLocalFormat("%d小时", hours);
+            }
+            if (minutes >= 0) {
+                diffTime += StringHelper.getLocalFormat("%d分钟", minutes);
+            }
+            diffTime += "后响铃";
         }
         return diffTime;
     }

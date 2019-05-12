@@ -1,7 +1,8 @@
 package com.example.randomalarm.alarm;
 
-import android.app.AlertDialog;
+import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,14 +10,20 @@ import android.os.Vibrator;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.randomalarm.R;
 import com.example.randomalarm.common.DateHelper;
+import com.example.randomalarm.common.EventBusHelper;
+import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.github.glomadrian.grav.GravView;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -27,16 +34,25 @@ import tyrantgit.explosionfield.ExplosionField;
 public class AlarmActivity extends AppCompatActivity {
 
     public static final String ALARM_ID = "ALARM_ID";
-    ExplosionField mExplosionField;
+    private static final int CLOSE_DELAY = 500;
     @BindView(R.id.tv_remind)
     TextView tvRemind;
     @BindView(R.id.tv_close)
     TextView tvClose;
+    @BindView(R.id.tv_real_time)
+    TextView tvRealTime;
+    @BindView(R.id.tv_alarm_song)
+    TextView tvAlarmSong;
+    @BindView(R.id.iv_moon_remind)
+    ImageView ivMoonRemind;
+    @BindView(R.id.iv_sun_close)
+    ImageView ivSunClose;
+    TimeTickReceiver timeTickReceiver;
+    private ExplosionField mExplosionField;
     private Vibrator vibrator;
     private MediaPlayer mediaPlayer;
     private Timer timer;
     private AlarmSettingInfo alarmSettingInfo;
-    private AlertDialog alertDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,21 +61,34 @@ public class AlarmActivity extends AppCompatActivity {
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.activity_alarm);
         ButterKnife.bind(this);
+        EventBusHelper.register(this);
+        timeTickReceiver = new TimeTickReceiver();
+        registerReceiver(timeTickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        showRealTime(Calendar.getInstance());
 
         mExplosionField = ExplosionField.attach2Window(this);
         Intent intent = getIntent();
-//        long alarmId = intent.getLongExtra(ALARM_ID, -1);
-//        if (alarmId == -1) {
-//            return;
-//        }
-//        vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
-//        alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(1L);
-//        playMedia();
+        long alarmId = intent.getLongExtra(ALARM_ID, -1);
+        if (alarmId == -1) {
+            return;
+        }
+        vibrator = (Vibrator) getSystemService(Service.VIBRATOR_SERVICE);
+        alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(alarmId);
+        playMedia();
+    }
+
+    @Subscribe
+    public void getRealTimeEvent(Calendar calendar) {
+        showRealTime(calendar);
+    }
+
+    public void showRealTime(Calendar calendar) {
+        tvRealTime.setText(DateHelper.format(calendar.getTime()));
     }
 
     public void playMedia() {
         String playedSongPath = alarmSettingInfo.getPlayedSongPath();
-        String title = "闹钟-歌曲：";
+        String title = "铃声：";
         File file = new File(playedSongPath);
         if (file.exists()) {
             Uri uri = Uri.fromFile(file);
@@ -69,7 +98,7 @@ public class AlarmActivity extends AppCompatActivity {
             mediaPlayer = MediaPlayer.create(this, R.raw.dawn);
             title += "默认";
         }
-
+        tvAlarmSong.setText(title);
         //重复播放
         mediaPlayer.setOnCompletionListener(mp -> {
             if (mediaPlayer != null) {
@@ -78,43 +107,32 @@ public class AlarmActivity extends AppCompatActivity {
         });
         mediaPlayer.start();
         vibrateOrNot();
-        showDialog(title);
+        int duration = alarmSettingInfo.getDuration() * DateHelper.MINUTE_TO_MILLIS;
+        closeInTime(duration);
     }
 
     public void vibrateOrNot() {
         if (alarmSettingInfo.getIsVibrated() && vibrator.hasVibrator()) {
             vibrator.cancel();
-            vibrator.vibrate(new long[]{200, 100}, 0);
+            long[] pattern = {500, 400};
+            vibrator.vibrate(pattern, 0);
         }
     }
 
-    public void showDialog(String title) {
-        //创建一个闹钟提醒的对话框,点击确定关闭铃声与页面
-        String message = DateHelper.format(new Date());
-        String text = "关闭闹铃";
-        AlarmActivity context = AlarmActivity.this;
-        AlarmMangerClass alarmHandler = new AlarmMangerClass(context);
-//        alertDialog = new AlertDialog.Builder(context).setTitle(title).setMessage(message)
-//                .setPositiveButton(text, (dialog, which) -> {
-//                    setNextDayFirstAlarm(alarmHandler);
-//                }).setNegativeButton("稍后提醒", (dialog, which) -> {
-//                    setNextIntervalAlarm(alarmHandler);
-//                }).create();
-//        alertDialog.show();
-        //分钟转为毫秒
-        int duration = alarmSettingInfo.getDuration() * DateHelper.MINUTE_TO_MILLIS;
-        closeInTime(duration);
+    /**
+     * 设置下一个重复间隔的闹钟
+     */
+    public void setNextIntervalAlarm() {
+        new AlarmMangerClass(AlarmActivity.this).setNextIntervalAlarm(alarmSettingInfo);
+        closeInTime(CLOSE_DELAY);
     }
 
-    public void setNextIntervalAlarm(AlarmMangerClass alarmHandler) {
-        alarmHandler.setNextIntervalAlarm(alarmSettingInfo);
-        this.finish();
-    }
-
-    public void setNextDayFirstAlarm(AlarmMangerClass alarmHandler) {
-        //设置下一天的闹钟
-        alarmHandler.setNextDayFirstAlarm(alarmSettingInfo, false);
-        this.finish();
+    /**
+     * 设置下一天的闹钟
+     */
+    public void setNextDayFirstAlarm() {
+        new AlarmMangerClass(AlarmActivity.this).setNextDayFirstAlarm(alarmSettingInfo, false);
+        closeInTime(CLOSE_DELAY);
     }
 
     public void thisFinish() {
@@ -141,29 +159,24 @@ public class AlarmActivity extends AppCompatActivity {
             timer.cancel();
             timer = null;
         }
-        if (alertDialog != null) {
-            alertDialog.dismiss();
-        }
         if (vibrator != null) {
             vibrator.cancel();
         }
+        EventBusHelper.unregister(this);
+        unregisterReceiver(timeTickReceiver);
         super.onDestroy();
     }
 
     public void close_onClick(View view) {
-        explode(view);
+        explode(ivSunClose);
         explode(tvClose);
-        closeInTime(500);
-//        AlarmMangerClass alarmHandler = new AlarmMangerClass(AlarmActivity.this);
-//        setNextDayFirstAlarm(alarmHandler);
+        setNextDayFirstAlarm();
     }
 
     public void remind_onClick(View view) {
-        explode(view);
+        explode(ivMoonRemind);
         explode(tvRemind);
-        closeInTime(500);
-//        AlarmMangerClass alarmHandler = new AlarmMangerClass(AlarmActivity.this);
-//        setNextIntervalAlarm(alarmHandler);
+        setNextIntervalAlarm();
     }
 
     public void explode(View view) {

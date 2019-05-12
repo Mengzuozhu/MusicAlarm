@@ -8,12 +8,12 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/civ_moon_remind"
+        android:id="@+id/iv_moon_remind"
         android:layout_width="@dimen/image_view_size"
         android:layout_height="@dimen/image_view_size"
         android:contentDescription="remind latter"
         android:onClick="remind_onClick"
-        android:src="@mipmap/moon1"
+        android:src="@mipmap/moon"
         app:layout_constraintBottom_toBottomOf="@+id/divider_middle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,11 +23,12 @@
         android:id="@+id/tv_remind"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="remind_onClick"
         android:text="@string/remind_latter"
-        android:textSize="@dimen/font_23"
-        app:layout_constraintEnd_toEndOf="@+id/civ_moon_remind"
-        app:layout_constraintStart_toStartOf="@+id/civ_moon_remind"
-        app:layout_constraintTop_toBottomOf="@+id/civ_moon_remind" />
+        android:textSize="@dimen/font_25"
+        app:layout_constraintEnd_toEndOf="@+id/iv_moon_remind"
+        app:layout_constraintStart_toStartOf="@+id/iv_moon_remind"
+        app:layout_constraintTop_toBottomOf="@+id/iv_moon_remind" />
 
     <com.github.glomadrian.grav.GravView
         android:id="@+id/grav_moon"
@@ -69,7 +70,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/civ_sun_close"
+        android:id="@+id/iv_sun_close"
         android:layout_width="@dimen/image_view_size"
         android:layout_height="@dimen/image_view_size"
         android:contentDescription="close"
@@ -84,12 +85,14 @@
         android:id="@+id/tv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:onClick="close_onClick"
         android:text="@string/close_alarm"
         android:textColor="@color/colorGold"
-        android:textSize="@dimen/font_23"
-        app:layout_constraintEnd_toEndOf="@+id/civ_sun_close"
-        app:layout_constraintStart_toStartOf="@+id/civ_sun_close"
-        app:layout_constraintTop_toBottomOf="@+id/civ_sun_close" />
+        android:textSize="@dimen/font_25"
+        app:layout_constraintBottom_toTopOf="@+id/iv_sun_close"
+        app:layout_constraintEnd_toEndOf="@+id/iv_sun_close"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/iv_sun_close" />
 
     <com.github.glomadrian.grav.GravView
         android:id="@+id/grav_sun"
@@ -144,5 +147,28 @@
         app:side_to_side_min_duration="2000"
         tools:layout_editor_absoluteX="-94dp" />
 
+    <TextView
+        android:id="@+id/tv_real_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/undefined"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/font_45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_alarm_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/undefined"
+        android:textSize="@dimen/font_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
