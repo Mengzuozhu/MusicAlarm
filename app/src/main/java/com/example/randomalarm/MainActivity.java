@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.randomalarm.adapter.MainAdapter;
-import com.example.randomalarm.alarm.AlarmActivity;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.edit.AlarmEditActivity;
@@ -22,6 +21,7 @@ import com.example.randomalarm.presenter.MainPresenter;
 import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 import com.example.randomalarm.setting.DefaultSettingActivity;
+import com.example.randomalarm.setting.SurpriseAlarm;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     FloatingActionButton fabAdd;
     MainAdapter mainAdapter;
     List <AlarmSettingInfo> alarmSettingInfos;
+    SurpriseAlarm surpriseAlarm;
     private MainContract.Presenter presenter;
 
     @Override
@@ -56,8 +57,11 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         EventBusHelper.unregister(this);
+        if (surpriseAlarm != null) {
+            surpriseAlarm.close();
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -100,8 +104,6 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //        this.finish();
 //        NotificationUtils notificationUtils = new NotificationUtils(this);
 //        notificationUtils.sendNotification("测试标题", "测试内容");
-//        Intent intent = getNewIntent(AlarmActivity.class);
-//        startActivity(intent);
     }
 
     public void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {
@@ -174,6 +176,10 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     @Subscribe
     public void onInsertOrReplaceAlarmEvent(AlarmSettingInfo alarmSettingInfo) {
+        if (surpriseAlarm == null) {
+            surpriseAlarm = new SurpriseAlarm(this);
+        }
+        surpriseAlarm.showSurprise(alarmSettingInfo.getHour(), alarmSettingInfo.getMinute());
         presenter.insertOrReplace(alarmSettingInfo);
         presenter.initOrRefreshAlarm();
     }

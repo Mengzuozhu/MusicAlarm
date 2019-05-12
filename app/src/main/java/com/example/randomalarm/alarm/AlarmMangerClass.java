@@ -53,12 +53,6 @@ public class AlarmMangerClass {
                 setNextDayFirstAlarm(sortedAlarmInfo, false);
             }
         }
-        AlarmManager.AlarmClockInfo nextAlarmClock = alarmManager.getNextAlarmClock();
-        if (nextAlarmClock != null) {
-            Log.w("nextAlarmClock", String.valueOf(nextAlarmClock.getTriggerTime()));
-        } else {
-            Log.w("nextAlarmClock", "null");
-        }
     }
 
     /**
