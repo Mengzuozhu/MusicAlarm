@@ -30,12 +30,13 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements MainContract.View {
 
     public static final int INSERT_OR_REPLACE_ALARM = 2;
     @BindView(R.id.rv_alarm)
-    RecyclerView lvAlarm;
+    RecyclerView rvAlarm;
     @BindView(R.id.fab_alarm_add)
     FloatingActionButton fabAdd;
     MainAdapter mainAdapter;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
         presenter = new MainPresenter(this);
         presenter.initOrRefreshAlarm();
         EventBusHelper.register(this);
@@ -98,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      *
      * @param view
      */
+    @OnClick(R.id.fab_alarm_add)
     public void addAlarm_onClick(View view) {
         AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
         showAlarmSetting(alarmSettingInfo);
@@ -106,22 +109,22 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 //        notificationUtils.sendNotification("测试标题", "测试内容");
     }
 
-    public void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {
+    private void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {
         Intent intent = getNewIntent(AlarmSettingActivity.class);
         intent.putExtra(AlarmSettingActivity.ALARM_SETTING_INFO, alarmSettingInfo);
         startActivityForResult(intent, INSERT_OR_REPLACE_ALARM);
     }
 
-    public Intent getNewIntent(Class <?> cls) {
+    private Intent getNewIntent(Class <?> cls) {
         return new Intent(MainActivity.this, cls);
     }
 
-    public void initAlarm() {
+    private void initAlarm() {
         mainAdapter = new MainAdapter(R.layout.item_alarm, alarmSettingInfos);
         setOnItemClickListener();
         mainAdapter.setCheckAlarmListener(presenter);
-        lvAlarm.setLayoutManager(new LinearLayoutManager(this));
-        lvAlarm.setAdapter(mainAdapter);
+        rvAlarm.setLayoutManager(new LinearLayoutManager(this));
+        rvAlarm.setAdapter(mainAdapter);
     }
 
     @Override

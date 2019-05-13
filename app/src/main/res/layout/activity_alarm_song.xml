@@ -14,7 +14,6 @@
         android:id="@+id/fab_song_scroll_first"
         style="@style/StyleFab"
         android:layout_marginBottom="20dp"
-        android:onClick="scrollToFirstSong_onClick"
         android:src="@mipmap/go_top"
         app:backgroundTint="@color/colorGray"
         app:layout_constraintBottom_toTopOf="@+id/fab_song_add"
@@ -23,7 +22,6 @@
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_song_add"
         style="@style/StyleFab"
-        android:onClick="addSong_onClick"
         android:src="@mipmap/add"
         app:backgroundTint="@color/colorGray"
         app:layout_constraintBottom_toBottomOf="parent"

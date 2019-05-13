@@ -9,9 +9,8 @@
     <include layout="@layout/content_song_picker" />
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab_song_scroll_first"
+        android:id="@+id/fab_song_file_scroll_first"
         style="@style/StyleFab"
-        android:onClick="scrollToFirstSong_onClick"
         android:src="@mipmap/go_top"
         app:backgroundTint="@color/colorGray" />
 </android.support.design.widget.CoordinatorLayout>

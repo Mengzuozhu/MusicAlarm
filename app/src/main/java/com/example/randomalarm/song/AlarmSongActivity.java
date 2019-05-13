@@ -7,7 +7,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,8 +27,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * 闹钟铃声设置
@@ -42,17 +43,16 @@ public class AlarmSongActivity extends AppCompatActivity {
     RecyclerView rvAlarmSong;
     @BindView(R.id.sv_alarm_song)
     SearchView svAlarmSong;
+    @BindView(R.id.fab_song_scroll_first)
+    FloatingActionButton fabSongScrollFirst;
+    @BindString(R.string.ring_name)
     String ringName;
-    String playModeName;
     ArrayList <SongInfo> songInfos;
     SongInfoAdapter adapter;
     AlarmSettingInfo alarmSettingInfo;
     HashMap <SongPlayedMode, Integer> songPlayedModeAndMenuIds;
-    int rbtnSongSelect;
-    @BindView(R.id.fab_song_scroll_first)
-    FloatingActionButton fabSongScrollFirst;
-    private Menu currentMenu;
     LinearLayoutManager layoutManager;
+    private Menu currentMenu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,8 +62,6 @@ public class AlarmSongActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         ViewerHelper.displayHomeAsUp(actionBar);
 
-        ringName = this.getString(R.string.ringing);
-        playModeName = this.getString(R.string.play_mode);
         Intent intent = getIntent();
         alarmSettingInfo = intent.getParcelableExtra(ringName);
         songInfos = alarmSettingInfo.getSongInfos();
@@ -148,7 +146,6 @@ public class AlarmSongActivity extends AppCompatActivity {
     }
 
     private void initAlarmSong() {
-        rbtnSongSelect = R.id.chb_song_select;
         adapter = new SongInfoAdapter(songInfos);
         // 开启拖拽
         adapter.enableDrag(rvAlarmSong, R.id.tv_song_name);
@@ -178,12 +175,6 @@ public class AlarmSongActivity extends AppCompatActivity {
     public void save() {
         Intent intent = getIntent();
         setPlayMode();
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            CheckBox checkBox = (CheckBox) adapter.getViewByPosition(rvAlarmSong, i, rbtnSongSelect);
-            if (checkBox != null) {
-                songInfos.get(i).setSelect(checkBox.isChecked());
-            }
-        }
         alarmSettingInfo.setSongInfos(songInfos);
         intent.putExtra(ringName, alarmSettingInfo);
         setResult(AlarmSettingActivity.RING_SET, intent);
@@ -198,10 +189,11 @@ public class AlarmSongActivity extends AppCompatActivity {
         }
     }
 
-    public Intent getNewIntent(Class <?> cls) {
+    private Intent getNewIntent(Class <?> cls) {
         return new Intent(this, cls);
     }
 
+    @OnClick(R.id.fab_song_add)
     public void addSong_onClick(View view) {
         Intent intent = getNewIntent(SongPickerActivity.class);
         startActivityForResult(intent, ADD_SONG_CODE);
@@ -234,6 +226,7 @@ public class AlarmSongActivity extends AppCompatActivity {
 
     }
 
+    @OnClick(R.id.fab_song_scroll_first)
     public void scrollToFirstSong_onClick(View view) {
         if (adapter.getItemCount() > 0) {
             rvAlarmSong.scrollToPosition(0);

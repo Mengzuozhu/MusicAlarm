@@ -44,7 +44,7 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
         timePicker.setIs24HourView(true);
-        ringName = this.getString(R.string.ringing);
+        ringName = this.getString(R.string.ring_name);
         Intent intent = getIntent();
         AlarmSettingInfo alarmSettingInfo = intent.getParcelableExtra(ALARM_SETTING_INFO);
         presenter = new AlarmSettingPresenter(this, alarmSettingInfo);

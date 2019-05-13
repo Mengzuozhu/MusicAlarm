@@ -23,6 +23,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SongPickerActivity extends AppCompatActivity {
 
@@ -30,11 +31,11 @@ public class SongPickerActivity extends AppCompatActivity {
     RecyclerView rvSongFile;
     @BindView(R.id.sv_song_file)
     SearchView svSongFile;
+    @BindView(R.id.fab_song_file_scroll_first)
+    FloatingActionButton fabSongScrollFirst;
     SongInfoAdapter adapter;
     ArrayList <SongInfo> songFiles;
     LinearLayoutManager layoutManager;
-    @BindView(R.id.fab_song_scroll_first)
-    FloatingActionButton fabSongScrollFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,14 +125,8 @@ public class SongPickerActivity extends AppCompatActivity {
         setResult(AlarmSongActivity.ADD_SONG_CODE, intent);
     }
 
-    public ArrayList <SongInfo> getCheckedSongInfos() {
+    private ArrayList <SongInfo> getCheckedSongInfos() {
         ArrayList <SongInfo> newSongPaths = new ArrayList <>();
-//        for (int i = 0; i < adapter.getItemCount(); i++) {
-//            CheckBox checkBox = (CheckBox) adapter.getViewByPosition(rvSongFile, i, chbSongSelectId);
-//            if (checkBox != null && checkBox.isChecked()) {
-//                newSongPaths.add(songFiles.get(i));
-//            }
-//        }
         for (SongInfo songFile : songFiles) {
             if (songFile.isSelect()) {
                 newSongPaths.add(songFile);
@@ -140,6 +135,7 @@ public class SongPickerActivity extends AppCompatActivity {
         return newSongPaths;
     }
 
+    @OnClick(R.id.fab_song_file_scroll_first)
     public void scrollToFirstSong_onClick(View view) {
         if (adapter.getItemCount() > 0) {
             rvSongFile.scrollToPosition(0);

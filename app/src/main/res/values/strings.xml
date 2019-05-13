@@ -6,7 +6,7 @@
     <string name="title_activity_alarm_song">闹钟铃声</string>
     <string name="title_activity_song_picker">添加铃声</string>
     <string name="repeat_name">重复</string>
-    <string name="ringing">铃声</string>
+    <string name="ring_name">铃声</string>
     <string name="alarm_setting_db_name">T_ALARM_SETTING</string>
     <string name="default_alarm_setting_db_name">T_DEFAULT_ALARM_SETTING</string>
     <string name="edit">编辑</string>

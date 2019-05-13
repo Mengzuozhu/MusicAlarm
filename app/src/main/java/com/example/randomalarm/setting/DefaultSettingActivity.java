@@ -34,7 +34,7 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
-        ringName = this.getString(R.string.ringing);
+        ringName = this.getString(R.string.ring_name);
         defaultSettingModel = new DefaultSettingModel(this);
         presenter = new AlarmSettingPresenter(this, defaultSettingModel.loadDefaultAlarmSetting());
         presenter.initAlarm();
