@@ -34,7 +34,7 @@ public class ViewerHelper {
         }
     }
 
-    public static void setCheckBoxClick(BaseQuickAdapter baseAdapter, @IdRes int id) {
+    public static void setOnItemClickWithCheckBox(BaseQuickAdapter baseAdapter, @IdRes int id) {
         baseAdapter.setOnItemClickListener((adapter, view, position) -> {
             CheckBox checkBox = view.findViewById(id);
             checkBox.performClick();

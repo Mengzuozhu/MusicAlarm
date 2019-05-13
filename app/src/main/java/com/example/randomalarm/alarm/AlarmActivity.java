@@ -1,6 +1,8 @@
 package com.example.randomalarm.alarm;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.media.MediaPlayer;
@@ -18,7 +20,6 @@ import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
-import com.github.glomadrian.grav.GravView;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -53,17 +54,29 @@ public class AlarmActivity extends AppCompatActivity {
     private MediaPlayer mediaPlayer;
     private Timer timer;
     private AlarmSettingInfo alarmSettingInfo;
+    private BroadcastReceiver screenLockReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            //锁屏后，稍后提醒
+            if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+                setNextIntervalAlarm();
+            }
+        }
+    };
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
-        setContentView(R.layout.activity_alarm);
+        setContentView(R.layout.activity_alarm_remind);
         ButterKnife.bind(this);
         EventBusHelper.register(this);
+
         timeTickReceiver = new TimeTickReceiver();
         registerReceiver(timeTickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
+        registerReceiver(screenLockReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
         showRealTime(Calendar.getInstance());
 
         mExplosionField = ExplosionField.attach2Window(this);
@@ -164,6 +177,7 @@ public class AlarmActivity extends AppCompatActivity {
         }
         EventBusHelper.unregister(this);
         unregisterReceiver(timeTickReceiver);
+        unregisterReceiver(screenLockReceiver);
         super.onDestroy();
     }
 
@@ -183,5 +197,4 @@ public class AlarmActivity extends AppCompatActivity {
         mExplosionField.explode(view);
         view.setOnClickListener(null);
     }
-
 }

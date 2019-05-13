@@ -34,8 +34,8 @@ public class SongInfoAdapter extends BaseItemDraggableAdapter <SongInfo, BaseVie
         super(R.layout.item_song, songInfos);
         this.songInfos = songInfos;
         chbSongSelectId = R.id.chb_song_select;
-        setCheckAlarmListener();
-        ViewerHelper.setCheckBoxClick(this, R.id.chb_song_select);
+        setOnItemChildCheckAlarmListener();
+        ViewerHelper.setOnItemClickWithCheckBox(this, R.id.chb_song_select);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class SongInfoAdapter extends BaseItemDraggableAdapter <SongInfo, BaseVie
         new TextQueryHandler(svAlarmSong, this, songInfos, nameAndQuerySpans).setQueryTextListener();
     }
 
-    private void setCheckAlarmListener() {
+    private void setOnItemChildCheckAlarmListener() {
         this.setOnItemChildClickListener((adapter, view, position) -> {
             CheckBox checkBox = (CheckBox) view;
             SongInfo songInfo = (SongInfo) adapter.getItem(position);

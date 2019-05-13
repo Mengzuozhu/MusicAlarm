@@ -25,17 +25,16 @@ public class MainAdapter extends BaseQuickAdapter <AlarmSettingInfo, BaseViewHol
     @Override
     protected void convert(BaseViewHolder viewHolder, AlarmSettingInfo alarmSettingInfo) {
         int swhAlarmStatus = R.id.swh_status;
-        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowedTime() + " ID:" + alarmSettingInfo.getId())
-                .addOnClickListener(swhAlarmStatus);
+        viewHolder.setText(R.id.tv_alarm_time, alarmSettingInfo.getShowedTime()).addOnClickListener(swhAlarmStatus);
         viewHolder.setChecked(swhAlarmStatus, alarmSettingInfo.getIsOpenStatus());
     }
 
     public void setCheckAlarmListener(MainContract.Presenter presenter) {
         this.setOnItemChildClickListener((adapter, view, position) -> {
-            Switch alarmStatus = (Switch) view;
+            Switch switchStatus = (Switch) view;
             AlarmSettingInfo alarm = (AlarmSettingInfo) adapter.getItem(position);
-            if (alarm != null) {
-                alarm.setIsOpenStatus(alarmStatus.isChecked());
+            if (alarm != null && switchStatus != null) {
+                alarm.setIsOpenStatus(switchStatus.isChecked());
                 presenter.insertOrReplace(alarm);
             }
         });

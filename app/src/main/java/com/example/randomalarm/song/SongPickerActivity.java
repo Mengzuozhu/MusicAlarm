@@ -5,13 +5,13 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.SearchView;
 
 import com.example.randomalarm.R;
@@ -32,7 +32,9 @@ public class SongPickerActivity extends AppCompatActivity {
     SearchView svSongFile;
     SongInfoAdapter adapter;
     ArrayList <SongInfo> songFiles;
-    private int chbSongSelectId;
+    LinearLayoutManager layoutManager;
+    @BindView(R.id.fab_song_scroll_first)
+    FloatingActionButton fabSongScrollFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +43,6 @@ public class SongPickerActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
-        chbSongSelectId = R.id.chb_song_select;
         RxPermissions rxPermissions = new RxPermissions(this);
         rxPermissions.request(Manifest.permission.READ_EXTERNAL_STORAGE).subscribe(granted -> {
             if (granted) {
@@ -50,6 +51,7 @@ public class SongPickerActivity extends AppCompatActivity {
                 ViewerHelper.showToast(SongPickerActivity.this, "无权限访问");
             }
         });
+        showAndHideSongScrollFirst();
     }
 
     @Override
@@ -86,11 +88,29 @@ public class SongPickerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    private void showAndHideSongScrollFirst() {
+        rvSongFile.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (layoutManager != null) {
+                    int position = layoutManager.findFirstVisibleItemPosition();
+                    if (position > 0) {
+                        fabSongScrollFirst.show();
+                    } else {
+                        fabSongScrollFirst.hide();
+                    }
+                }
+            }
+        });
+    }
+
     public void initAlarmSong() {
         songFiles = FileManager.getInstance(SongPickerActivity.this).getSongInfos();
         adapter = new SongInfoAdapter(songFiles);
         adapter.setQueryTextListener(svSongFile);
-        rvSongFile.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        rvSongFile.setLayoutManager(layoutManager);
         rvSongFile.setAdapter(adapter);
     }
 

@@ -1,17 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".song.AlarmSongActivity">
 
-    <include layout="@layout/content_alarm_song" />
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_alarm_song" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab_song_scroll_first"
         style="@style/StyleFab"
+        android:layout_marginBottom="20dp"
+        android:onClick="scrollToFirstSong_onClick"
+        android:src="@mipmap/go_top"
+        app:backgroundTint="@color/colorGray"
+        app:layout_constraintBottom_toTopOf="@+id/fab_song_add"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_song_add"
+        style="@style/StyleFab"
         android:onClick="addSong_onClick"
         android:src="@mipmap/add"
-        app:backgroundTint="@color/colorGray" />
-</android.support.design.widget.CoordinatorLayout>
+        app:backgroundTint="@color/colorGray"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</android.support.constraint.ConstraintLayout>

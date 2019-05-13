@@ -4,7 +4,6 @@ import android.os.Build;
 import android.support.annotation.RequiresApi;
 
 import com.example.randomalarm.alarm.AlarmMangerClass;
-import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.model.DefaultSettingModel;
@@ -36,7 +35,6 @@ public class MainPresenter implements MainContract.Presenter {
         alarmHandler.intiAllAlarms(sortedAlarmInfos);
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void deleteByKey(Iterable <Long> keys) {
         for (Long key : keys) {
             alarmHandler.cancelAlarm(key);

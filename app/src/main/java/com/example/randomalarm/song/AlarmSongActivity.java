@@ -1,13 +1,13 @@
 package com.example.randomalarm.song;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,7 +49,10 @@ public class AlarmSongActivity extends AppCompatActivity {
     AlarmSettingInfo alarmSettingInfo;
     HashMap <SongPlayedMode, Integer> songPlayedModeAndMenuIds;
     int rbtnSongSelect;
+    @BindView(R.id.fab_song_scroll_first)
+    FloatingActionButton fabSongScrollFirst;
     private Menu currentMenu;
+    LinearLayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +69,23 @@ public class AlarmSongActivity extends AppCompatActivity {
         songInfos = alarmSettingInfo.getSongInfos();
         initPlayModeAndId();
         initAlarmSong();
+        showAndHideSongScrollFirst();
+    }
+
+    private void showAndHideSongScrollFirst() {
+        rvAlarmSong.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                if (layoutManager != null) {
+                    int position = layoutManager.findFirstVisibleItemPosition();
+                    if (position > 0) {
+                        fabSongScrollFirst.show();
+                    } else {
+                        fabSongScrollFirst.hide();
+                    }
+                }
+            }
+        });
     }
 
     @Override
@@ -136,7 +156,8 @@ public class AlarmSongActivity extends AppCompatActivity {
         adapter.enableSwipeItem();
         //支持搜索
         adapter.setQueryTextListener(svAlarmSong);
-        rvAlarmSong.setLayoutManager(new LinearLayoutManager(this));
+        layoutManager = new LinearLayoutManager(this);
+        rvAlarmSong.setLayoutManager(layoutManager);
         rvAlarmSong.setAdapter(adapter);
     }
 
@@ -213,4 +234,9 @@ public class AlarmSongActivity extends AppCompatActivity {
 
     }
 
+    public void scrollToFirstSong_onClick(View view) {
+        if (adapter.getItemCount() > 0) {
+            rvAlarmSong.scrollToPosition(0);
+        }
+    }
 }

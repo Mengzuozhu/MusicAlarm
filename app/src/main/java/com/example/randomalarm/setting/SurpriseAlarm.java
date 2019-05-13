@@ -2,9 +2,9 @@ package com.example.randomalarm.setting;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.media.MediaPlayer;
 
 import com.example.randomalarm.R;
+import com.example.randomalarm.common.MediaPlayHelper;
 
 /**
  * author : Mzz
@@ -17,7 +17,7 @@ public class SurpriseAlarm {
     private final static int MINUTE = 25;
     private AlertDialog alertDialog;
     private Context context;
-    private MediaPlayer mediaPlayer;
+    private MediaPlayHelper mediaPlayHelper;
 
     public SurpriseAlarm(Context context) {
         this.context = context;
@@ -27,27 +27,22 @@ public class SurpriseAlarm {
         if (hour != HOUR || minute != MINUTE) {
             return;
         }
-        mediaPlayer = MediaPlayer.create(context, R.raw.dawn);
+        mediaPlayHelper = new MediaPlayHelper(context, R.raw.sea);
         //播放完成后，自动关闭
-        mediaPlayer.setOnCompletionListener(mp -> {
+        mediaPlayHelper.setOnCompletionListener(mp -> {
             close();
         });
-        mediaPlayer.start();
-        alertDialog = new AlertDialog.Builder(context).setTitle("Surprise").setMessage("彩蛋！！")
+        mediaPlayHelper.start();
+        alertDialog = new AlertDialog.Builder(context).setTitle("彩蛋！").setMessage("老人与海")
                 .setNegativeButton("关闭", (dialog, which) -> {
-                    if (mediaPlayer != null) {
-                        mediaPlayer.release();
-                        mediaPlayer = null;
-                    }
-                    dialog.dismiss();
+                    close();
                 }).create();
         alertDialog.show();
     }
 
     public void close() {
-        if (mediaPlayer != null) {
-            mediaPlayer.release();
-            mediaPlayer = null;
+        if (mediaPlayHelper != null) {
+            mediaPlayHelper.release();
         }
         if (alertDialog != null) {
             alertDialog.dismiss();
