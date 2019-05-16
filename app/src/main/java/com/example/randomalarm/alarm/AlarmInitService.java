@@ -27,7 +27,7 @@ public class AlarmInitService extends Service {
     }
 
     private void showAlarm() {
-        Intent intent = new Intent(this, AlarmActivity.class);
+        Intent intent = new Intent(this, AlarmRemindActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         this.startActivity(intent);
     }

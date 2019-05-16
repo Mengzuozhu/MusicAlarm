@@ -2,6 +2,7 @@ package com.example.randomalarm.common;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.net.Uri;
 
 /**
  * author : Mzz
@@ -13,6 +14,10 @@ public class MediaPlayHelper {
 
     public MediaPlayHelper(Context context, int resid) {
         player = MediaPlayer.create(context, resid);
+    }
+
+    public MediaPlayHelper(Context context, Uri uri) {
+        player = MediaPlayer.create(context, uri);
     }
 
     public void start() {
@@ -27,6 +32,17 @@ public class MediaPlayHelper {
             player.release();
             player = null;
         }
+    }
+
+    /**
+     * 设置重复播放
+     */
+    public void setLoopPlay() {
+        setOnCompletionListener(mp -> {
+            if (player != null) {
+                start();
+            }
+        });
     }
 
     public void setOnCompletionListener(MediaPlayer.OnCompletionListener listener) {

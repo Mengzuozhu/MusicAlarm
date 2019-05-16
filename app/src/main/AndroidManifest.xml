@@ -39,7 +39,7 @@
             android:name=".setting.AlarmSettingActivity"
             android:label="@string/title_activity_alarm_setting" />
         <activity
-            android:name=".alarm.AlarmActivity"
+            android:name=".alarm.AlarmRemindActivity"
             android:launchMode="singleTask"
             android:theme="@style/AppTheme.FullscreenNoActionBar">
             <!--<intent-filter>-->

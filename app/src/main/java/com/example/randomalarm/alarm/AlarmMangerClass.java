@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.util.Log;
 
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.ViewerHelper;
@@ -126,10 +125,10 @@ public class AlarmMangerClass {
     }
 
     private PendingIntent getPendingIntent(Long id) {
-        Intent intent = new Intent(context, AlarmActivity.class);
+        Intent intent = new Intent(context, AlarmRemindActivity.class);
         //可能在服务中启动activity，所以需要添加这个标记
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(AlarmActivity.ALARM_ID, id.longValue());
+        intent.putExtra(AlarmRemindActivity.ALARM_ID, id.longValue());
         return PendingIntent.getActivity(context, id.intValue(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
