@@ -15,6 +15,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".multiCalendar.MultCalendarActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".setting.DefaultSettingActivity"
             android:label="@string/title_activity_default_setting" />
         <activity
@@ -29,11 +41,13 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
+
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+
+                <!--<action android:name="android.intent.action.VIEW" />-->
+            <!--</intent-filter>-->
         </activity>
         <activity
             android:name=".setting.AlarmSettingActivity"
@@ -41,13 +55,7 @@
         <activity
             android:name=".alarm.AlarmRemindActivity"
             android:launchMode="singleTask"
-            android:theme="@style/AppTheme.FullscreenNoActionBar">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-                <!--<action android:name="android.intent.action.VIEW" />-->
-            <!--</intent-filter>-->
-        </activity>
+            android:theme="@style/AppTheme.FullscreenNoActionBar" />
 
         <receiver
             android:name=".alarm.AppBootReceiver"

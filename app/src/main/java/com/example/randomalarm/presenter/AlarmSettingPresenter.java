@@ -71,7 +71,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
         settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
-//        view.showAlarm(settings);
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, "日期："));
         initAdapter(settings);
     }
 
@@ -87,6 +87,12 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         recyclerView.setAdapter(multipleItemAdapter);
     }
 
+    /**
+     * 获取重复模式
+     *
+     * @param repeat
+     * @return
+     */
     private String getRepeatInfo(ArrayList <AlarmRepeatMode> repeat) {
         if (repeat == null || repeat.size() == 0) {
             return REPEAT_MODE_NAME + "：无";
@@ -132,6 +138,30 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
 
     private int getInterval(int i) {
         return (i + 1) * 5;
+    }
+
+    @Override
+    public void showSetting(int position, TextView textView) {
+        switch (position) {
+            case 0:
+                showRepeatModeDialog(textView);
+                break;
+            case 1:
+                showSongPathsSetting();
+                break;
+            case 2:
+                showIntervalDialog(textView);
+                break;
+            case 3:
+                showDurationDialog(textView);
+                break;
+            case 4:
+                showRepeatFrequencyDialog(textView);
+                break;
+            case 5:
+                showDatePicker();
+                break;
+        }
     }
 
     private void showRepeatModeDialog(TextView textView) {
@@ -209,25 +239,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         return numberPicker;
     }
 
-    @Override
-    public void showSetting(int position, TextView textView) {
-        switch (position) {
-            case 0:
-                showRepeatModeDialog(textView);
-                break;
-            case 1:
-                showSongPathsSetting();
-                break;
-            case 2:
-                showIntervalDialog(textView);
-                break;
-            case 3:
-                showDurationDialog(textView);
-                break;
-            case 4:
-                showRepeatFrequencyDialog(textView);
-                break;
-        }
+    private void showDatePicker() {
+
     }
 
     @Override

@@ -58,7 +58,7 @@ public class AlarmRemindActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            //点击锁屏后，稍后提醒
+            //点击锁屏键后，表示稍后提醒
             if (Intent.ACTION_SCREEN_OFF.equals(action)) {
                 setNextIntervalAlarm();
             }

@@ -71,4 +71,6 @@ dependencies {
     debugImplementation 'com.amitshekhar.android:debug-db:1.0.6'
     implementation 'com.github.glomadrian:Grav:1.1'
     implementation 'tyrantgit:explosionfield:1.0.1'
+    implementation 'com.joybar.calendar:librarycalendar:1.0.6'
+    implementation 'com.haibin:calendarview:3.6.2'
 }
