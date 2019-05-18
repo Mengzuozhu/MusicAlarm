@@ -17,13 +17,13 @@
         <activity
             android:name=".multiCalendar.MultCalendarActivity"
             android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.MAIN" />-->
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <!--<category android:name="android.intent.category.LAUNCHER" />-->
 
-                <action android:name="android.intent.action.VIEW" />
-            </intent-filter>
+                <!--<action android:name="android.intent.action.VIEW" />-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity
@@ -41,13 +41,13 @@
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTask">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
+                <category android:name="android.intent.category.LAUNCHER" />
 
-                <!--<action android:name="android.intent.action.VIEW" />-->
-            <!--</intent-filter>-->
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".setting.AlarmSettingActivity"

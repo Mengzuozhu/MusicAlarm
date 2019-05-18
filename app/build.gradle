@@ -33,7 +33,7 @@ android {
     }
     greendao {
         //数据库schema版本号
-        schemaVersion 3
+        schemaVersion 4
         //DaoSession、DaoMaster以及所有实体类的dao生成的目录,默认为你的entity所在的包名
         //daoPackage 包名
         daoPackage 'com.example.randomalarm.greendao.db'

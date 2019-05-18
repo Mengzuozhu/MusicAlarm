@@ -3,7 +3,12 @@ package com.example.randomalarm.setting;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.randomalarm.common.JsonConverter;
 import com.haibin.calendarview.Calendar;
+
+import org.greenrobot.greendao.converter.PropertyConverter;
+
+import java.util.ArrayList;
 
 /**
  * author : Mzz
@@ -101,5 +106,17 @@ public class AlarmCalendar implements Parcelable {
         dest.writeInt(this.year);
         dest.writeInt(this.month);
         dest.writeInt(this.day);
+    }
+
+    public static class Converter implements PropertyConverter <ArrayList <AlarmCalendar>, String> {
+        @Override
+        public ArrayList <AlarmCalendar> convertToEntityProperty(String databaseValue) {
+            return JsonConverter.jsonToList(databaseValue, AlarmCalendar.class);
+        }
+
+        @Override
+        public String convertToDatabaseValue(ArrayList <AlarmCalendar> entityProperty) {
+            return JsonConverter.convertToDatabaseValue(entityProperty);
+        }
     }
 }

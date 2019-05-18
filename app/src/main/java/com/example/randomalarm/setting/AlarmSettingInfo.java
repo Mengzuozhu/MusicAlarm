@@ -59,15 +59,17 @@ public class AlarmSettingInfo implements Parcelable {
     //播放模式
     @Convert(columnType = Integer.class, converter = SongPlayedMode.SongPlayedModeConverter.class)
     private SongPlayedMode songPlayedMode = SongPlayedMode.random;
+    @Convert(columnType = String.class, converter = AlarmCalendar.Converter.class)
+    private ArrayList <AlarmCalendar> alarmCalendars = new ArrayList <>();
     @Transient
     private int currentRepeatNum;
     @Transient
     private ArrayList <String> checkedSongPaths = null;
 
-    @Generated(hash = 879322034)
-    public AlarmSettingInfo(Long id, int hour, int minute, Boolean isOpenStatus, int interval, int repeatFrequency,
-                            int duration, boolean isVibrated, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos,
-                            SongPlayedMode songPlayedMode) {
+    @Generated(hash = 1549448405)
+    public AlarmSettingInfo(Long id, int hour, int minute, Boolean isOpenStatus, int interval, int repeatFrequency, int duration,
+                            boolean isVibrated, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos, SongPlayedMode songPlayedMode,
+                            ArrayList <AlarmCalendar> alarmCalendars) {
         this.id = id;
         this.hour = hour;
         this.minute = minute;
@@ -79,6 +81,7 @@ public class AlarmSettingInfo implements Parcelable {
         this.alarmRepeatMode = alarmRepeatMode;
         this.songInfos = songInfos;
         this.songPlayedMode = songPlayedMode;
+        this.alarmCalendars = alarmCalendars;
     }
 
     @Generated(hash = 664695116)
@@ -99,6 +102,7 @@ public class AlarmSettingInfo implements Parcelable {
         this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
         int tmpSongPlayedMode = in.readInt();
         this.songPlayedMode = tmpSongPlayedMode == -1 ? null : SongPlayedMode.values()[tmpSongPlayedMode];
+        this.alarmCalendars = in.createTypedArrayList(AlarmCalendar.CREATOR);
     }
 
     public Calendar getNextIntervalAlarm() {
@@ -256,6 +260,14 @@ public class AlarmSettingInfo implements Parcelable {
         this.isVibrated = isVibrated;
     }
 
+    public ArrayList <AlarmCalendar> getAlarmCalendars() {
+        return this.alarmCalendars;
+    }
+
+    public void setAlarmCalendars(ArrayList <AlarmCalendar> alarmCalendars) {
+        this.alarmCalendars = alarmCalendars;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -274,5 +286,6 @@ public class AlarmSettingInfo implements Parcelable {
         dest.writeList(this.alarmRepeatMode);
         dest.writeTypedList(this.songInfos);
         dest.writeInt(this.songPlayedMode == null ? -1 : this.songPlayedMode.ordinal());
+        dest.writeTypedList(this.alarmCalendars);
     }
 }

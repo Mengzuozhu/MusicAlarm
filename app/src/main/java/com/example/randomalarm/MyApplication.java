@@ -2,6 +2,7 @@ package com.example.randomalarm;
 
 import android.app.Application;
 
+import com.example.randomalarm.common.UpgradeDbHelper;
 import com.example.randomalarm.greendao.db.DaoMaster;
 import com.example.randomalarm.greendao.db.DaoSession;
 
@@ -18,7 +19,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, this.getString(R.string.alarm_setting_db_name));
+//        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, this.getString(R.string.alarm_setting_db_name));
+        UpgradeDbHelper helper = new UpgradeDbHelper(this, this.getString(R.string.alarm_setting_db_name));
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
     }

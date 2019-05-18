@@ -9,6 +9,7 @@ import org.greenrobot.greendao.internal.DaoConfig;
 import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.database.DatabaseStatement;
 
+import com.example.randomalarm.setting.AlarmCalendar.Converter;
 import com.example.randomalarm.setting.AlarmRepeatConverter;
 import com.example.randomalarm.setting.SongPlayedMode;
 import com.example.randomalarm.setting.SongPlayedMode.SongPlayedModeConverter;
@@ -41,11 +42,13 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         public final static Property AlarmRepeatMode = new Property(8, String.class, "alarmRepeatMode", false, "ALARM_REPEAT_MODE");
         public final static Property SongInfos = new Property(9, String.class, "songInfos", false, "SONG_INFOS");
         public final static Property SongPlayedMode = new Property(10, Integer.class, "songPlayedMode", false, "SONG_PLAYED_MODE");
+        public final static Property AlarmCalendars = new Property(11, String.class, "alarmCalendars", false, "ALARM_CALENDARS");
     }
 
     private final AlarmRepeatConverter alarmRepeatModeConverter = new AlarmRepeatConverter();
     private final SongInfoListConverter songInfosConverter = new SongInfoListConverter();
     private final SongPlayedModeConverter songPlayedModeConverter = new SongPlayedModeConverter();
+    private final Converter alarmCalendarsConverter = new Converter();
 
     public AlarmSettingInfoDao(DaoConfig config) {
         super(config);
@@ -69,7 +72,8 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
                 "\"IS_VIBRATED\" INTEGER NOT NULL ," + // 7: isVibrated
                 "\"ALARM_REPEAT_MODE\" TEXT," + // 8: alarmRepeatMode
                 "\"SONG_INFOS\" TEXT," + // 9: songInfos
-                "\"SONG_PLAYED_MODE\" INTEGER);"); // 10: songPlayedMode
+                "\"SONG_PLAYED_MODE\" INTEGER," + // 10: songPlayedMode
+                "\"ALARM_CALENDARS\" TEXT);"); // 11: alarmCalendars
     }
 
     /** Drops the underlying database table. */
@@ -112,6 +116,11 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         if (songPlayedMode != null) {
             stmt.bindLong(11, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
         }
+ 
+        ArrayList alarmCalendars = entity.getAlarmCalendars();
+        if (alarmCalendars != null) {
+            stmt.bindString(12, alarmCalendarsConverter.convertToDatabaseValue(alarmCalendars));
+        }
     }
 
     @Override
@@ -148,6 +157,11 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         if (songPlayedMode != null) {
             stmt.bindLong(11, songPlayedModeConverter.convertToDatabaseValue(songPlayedMode));
         }
+ 
+        ArrayList alarmCalendars = entity.getAlarmCalendars();
+        if (alarmCalendars != null) {
+            stmt.bindString(12, alarmCalendarsConverter.convertToDatabaseValue(alarmCalendars));
+        }
     }
 
     @Override
@@ -168,7 +182,8 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
             cursor.getShort(offset + 7) != 0, // isVibrated
             cursor.isNull(offset + 8) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 8)), // alarmRepeatMode
             cursor.isNull(offset + 9) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 9)), // songInfos
-            cursor.isNull(offset + 10) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 10)) // songPlayedMode
+            cursor.isNull(offset + 10) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 10)), // songPlayedMode
+            cursor.isNull(offset + 11) ? null : alarmCalendarsConverter.convertToEntityProperty(cursor.getString(offset + 11)) // alarmCalendars
         );
         return entity;
     }
@@ -186,6 +201,7 @@ public class AlarmSettingInfoDao extends AbstractDao<AlarmSettingInfo, Long> {
         entity.setAlarmRepeatMode(cursor.isNull(offset + 8) ? null : alarmRepeatModeConverter.convertToEntityProperty(cursor.getString(offset + 8)));
         entity.setSongInfos(cursor.isNull(offset + 9) ? null : songInfosConverter.convertToEntityProperty(cursor.getString(offset + 9)));
         entity.setSongPlayedMode(cursor.isNull(offset + 10) ? null : songPlayedModeConverter.convertToEntityProperty(cursor.getInt(offset + 10)));
+        entity.setAlarmCalendars(cursor.isNull(offset + 11) ? null : alarmCalendarsConverter.convertToEntityProperty(cursor.getString(offset + 11)));
      }
     
     @Override

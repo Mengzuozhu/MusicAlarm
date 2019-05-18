@@ -30,6 +30,7 @@ public class MultCalendarActivity extends AppCompatActivity implements
         CalendarView.OnYearChangeListener,
         CalendarView.OnMonthChangeListener {
 
+    private final static int MAX_MULTI_SELECT_SIZE = 200;
     @BindView(R.id.tv_month_day)
     TextView mTextMonthDay;
     @BindView(R.id.tv_year)
@@ -81,7 +82,7 @@ public class MultCalendarActivity extends AppCompatActivity implements
         //设置日期拦截事件，当前有效
         mCalendarView.setOnCalendarInterceptListener(this);
         mCalendarView.setOnMonthChangeListener(this);
-        mCalendarView.setMaxMultiSelectSize(200);
+        mCalendarView.setMaxMultiSelectSize(MAX_MULTI_SELECT_SIZE);
         showYear = mCalendarView.getCurYear();
         intiText();
         clear();
@@ -142,7 +143,7 @@ public class MultCalendarActivity extends AppCompatActivity implements
         showYear = calendar.getYear();
         int month = calendar.getMonth();
         int day = calendar.getDay();
-        mTextMonthDay.setText(month + "月" + day + "日");
+        mTextMonthDay.setText(String.format("%d月%d日", month, day));
         mTextYear.setText(String.valueOf(calendar.getYear()));
         mTextLunar.setText(calendar.getLunar());
         Calendar schemeCalendar = getSchemeCalendar(showYear, month, day, selectColor, "选");
