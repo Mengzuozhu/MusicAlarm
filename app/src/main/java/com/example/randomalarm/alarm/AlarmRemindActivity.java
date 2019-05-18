@@ -96,7 +96,7 @@ public class AlarmRemindActivity extends AppCompatActivity {
     }
 
     public void showRealTime(Calendar calendar) {
-        tvRealTime.setText(DateHelper.format(calendar.getTime()));
+        tvRealTime.setText(DateHelper.formatHHmm(calendar.getTime()));
     }
 
     public void playMedia() {

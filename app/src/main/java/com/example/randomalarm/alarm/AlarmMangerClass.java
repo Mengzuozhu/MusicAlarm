@@ -5,11 +5,11 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+import android.util.Log;
 
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.model.AlarmSettingModel;
-import com.example.randomalarm.setting.AlarmRepeatMode;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
 import java.util.Calendar;
@@ -69,17 +69,18 @@ public class AlarmMangerClass {
         Calendar nowTime = DateHelper.getNowTime();
         int nowHour = DateHelper.getNowHour();
         int nowMinute = DateHelper.getNowMinute();
-        //若设置的闹钟时间小于当前时间，或小时和分钟等于当前的，则添加1天，避免当天重复触发闹钟
+        //若设置的闹钟时间小于当前时间，或小时和分钟都等于当前的，则添加1天，避免当天重复触发闹钟
         if (nextCalendar.compareTo(nowTime) < 0 || (hour == nowHour && minute == nowMinute)) {
             nextCalendar.add(Calendar.DATE, 1);
         }
-        nextCalendar = AlarmRepeatMode.getNextAlarmDate(nextCalendar, alarmSettingInfo.getAlarmRepeatMode());
+        nextCalendar = alarmSettingInfo.getNextAlarmDate(nextCalendar);
+        Log.w("nextCalendar", DateHelper.formatDateAndHHmm(nextCalendar));
         setAlarm(alarmSettingInfo, nextCalendar, isShowRemind);
 //        setNotification(nextCalendar);
     }
 
     /**
-     * 设置下一间隔的闹钟
+     * 设置下一重复间隔的闹钟
      *
      * @param alarmSettingInfo
      */
@@ -88,7 +89,7 @@ public class AlarmMangerClass {
 
         Calendar calendar = alarmSettingInfo.getNextIntervalAlarm();
         if (calendar == null) {
-            //直接设置下一天闹钟
+            //当天不存在下一间隔闹钟，则直接设置下一天闹钟
             setNextDayFirstAlarm(alarmSettingInfo, false);
         } else {
             setAlarm(alarmSettingInfo, calendar, false);
@@ -152,6 +153,5 @@ public class AlarmMangerClass {
         PendingIntent pi = getPendingIntent(id);
         alarmManager.cancel(pi);
     }
-
 
 }

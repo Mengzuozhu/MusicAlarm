@@ -72,13 +72,13 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         alarmCalendars = alarmSettingInfo.getAlarmCalendars();
         alarmCalendars = AlarmCalendar.removeInvalidDate(alarmCalendars);
         Collections.sort(alarmCalendars);
-        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatInfo(alarmRepeatModes)));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatModeInfo(alarmRepeatModes)));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getAlarmCalendarsInfo()));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getSongPlayModeInfo()));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getIntervalInfo(interval)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
         settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
-        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getAlarmCalendarsInfo()));
         initAdapter(settings);
     }
 
@@ -100,7 +100,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
      * @param repeat
      * @return
      */
-    private String getRepeatInfo(ArrayList <AlarmRepeatMode> repeat) {
+    private String getRepeatModeInfo(ArrayList <AlarmRepeatMode> repeat) {
         if (repeat == null || repeat.size() == 0) {
             return REPEAT_MODE_NAME + "：无";
         }
@@ -174,19 +174,19 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
                 showRepeatModeDialog(textView);
                 break;
             case 1:
-                showSongPathsSetting();
+                view.showMultCalendarActivity(alarmSettingInfo);
                 break;
             case 2:
-                showIntervalDialog(textView);
+                showSongPathsSetting();
                 break;
             case 3:
-                showDurationDialog(textView);
+                showIntervalDialog(textView);
                 break;
             case 4:
-                showRepeatFrequencyDialog(textView);
+                showDurationDialog(textView);
                 break;
-            case 6:
-                view.showMultCalendarActivity(alarmSettingInfo);
+            case 5:
+                showRepeatFrequencyDialog(textView);
                 break;
         }
     }
@@ -204,7 +204,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
                 })
                 .setPositiveButton("确定", (dialog, which) -> {
                     setAlarmRepeatModes(repeatModes, checkedItems);
-                    textView.setText(getRepeatInfo(alarmRepeatModes));
+                    textView.setText(getRepeatModeInfo(alarmRepeatModes));
                 }).create().show();
     }
 

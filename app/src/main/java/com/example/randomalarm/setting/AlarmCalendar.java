@@ -36,7 +36,7 @@ public class AlarmCalendar implements Parcelable, Comparable <AlarmCalendar> {
      */
     private int year;
     /**
-     * 月1-12
+     * 月1-12，若转换为系统月份，则需要减1
      */
     private int month;
     /**
@@ -83,7 +83,7 @@ public class AlarmCalendar implements Parcelable, Comparable <AlarmCalendar> {
     }
 
     public boolean isOutOfDate() {
-        return toCalendar().getTimeInMillis() < DateHelper.getNowInMillis();
+        return toMultCalendar().getTimeInMillis() < DateHelper.getNowInMillis();
     }
 
     public int getYear() {
@@ -119,11 +119,19 @@ public class AlarmCalendar implements Parcelable, Comparable <AlarmCalendar> {
         return StringHelper.getLocalFormat("%d/%d", month, day);
     }
 
-    public Calendar toCalendar() {
+    public Calendar toMultCalendar() {
         Calendar calendar = new Calendar();
         calendar.setYear(year);
         calendar.setMonth(month);
         calendar.setDay(day);
+        return calendar;
+    }
+
+    public java.util.Calendar toCalendar() {
+        java.util.Calendar calendar = java.util.Calendar.getInstance();
+        calendar.set(java.util.Calendar.YEAR, year);
+        calendar.set(java.util.Calendar.MONTH, month - 1);
+        calendar.set(java.util.Calendar.DAY_OF_MONTH, day);
         return calendar;
     }
 

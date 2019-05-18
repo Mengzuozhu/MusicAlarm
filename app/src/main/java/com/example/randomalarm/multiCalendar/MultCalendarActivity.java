@@ -17,14 +17,12 @@ import com.example.randomalarm.R;
 import com.example.randomalarm.common.StringHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.setting.AlarmCalendar;
-import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -138,7 +136,7 @@ public class MultCalendarActivity extends AppCompatActivity implements
 
     public void addMultiSelect() {
         for (AlarmCalendar alarmCalendar : alarmCalendars) {
-            Calendar schemeCalendar = alarmCalendar.toCalendar();
+            Calendar schemeCalendar = alarmCalendar.toMultCalendar();
             schemeCalendar.setSchemeColor(selectColor);//如果单独标记颜色、则会使用这个颜色
             schemeCalendar.setScheme("选");
             schemeCalendar.addScheme(new Calendar.Scheme());

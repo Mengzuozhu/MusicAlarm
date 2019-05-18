@@ -15,6 +15,7 @@ import org.greenrobot.greendao.annotation.Transient;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Random;
 
 /**
@@ -68,7 +69,8 @@ public class AlarmSettingInfo implements Parcelable {
 
     @Generated(hash = 1549448405)
     public AlarmSettingInfo(Long id, int hour, int minute, Boolean isOpenStatus, int interval, int repeatFrequency, int duration,
-                            boolean isVibrated, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos, SongPlayedMode songPlayedMode,
+                            boolean isVibrated, ArrayList <AlarmRepeatMode> alarmRepeatMode, ArrayList <SongInfo> songInfos,
+                            SongPlayedMode songPlayedMode,
                             ArrayList <AlarmCalendar> alarmCalendars) {
         this.id = id;
         this.hour = hour;
@@ -105,6 +107,60 @@ public class AlarmSettingInfo implements Parcelable {
         this.alarmCalendars = in.createTypedArrayList(AlarmCalendar.CREATOR);
     }
 
+    /**
+     * 获取下一个响铃日期
+     *
+     * @param nextCalendar
+     * @return
+     */
+    public Calendar getNextAlarmDate(Calendar nextCalendar) {
+        //首选闹钟日期
+        if (alarmCalendars != null && alarmCalendars.size() > 0) {
+            return getNextAlarmDateByCalendar(nextCalendar);
+        }
+        return getNextAlarmDateByRepeatMode(nextCalendar);
+    }
+
+    private Calendar getNextAlarmDateByRepeatMode(Calendar nextCalendar) {
+        int weekDay = AlarmRepeatMode.getWeekDay(nextCalendar);
+        int minDay = Integer.MAX_VALUE;
+        //获取响铃星期中与当前星期的最小天数差
+        for (AlarmRepeatMode repeatMode : alarmRepeatMode) {
+            int diff = repeatMode.getId() - weekDay;
+            //若天数差小于0，则添加一个周期7
+            if (diff < 0) {
+                diff += AlarmRepeatMode.RECYCLE_DAY;
+            }
+            if (diff < minDay) {
+                minDay = diff;
+            }
+        }
+        if (minDay != Integer.MAX_VALUE) {
+            nextCalendar.add(Calendar.DATE, minDay);
+        }
+        return nextCalendar;
+    }
+
+    private Calendar getNextAlarmDateByCalendar(Calendar nextCalendar) {
+        Collections.sort(alarmCalendars);
+        for (int i = 0; i < alarmCalendars.size(); i++) {
+            AlarmCalendar alarmCalendar = alarmCalendars.get(i);
+            //获取下一个闹钟日期
+            if (nextCalendar.compareTo(alarmCalendar.toCalendar()) <= 0) {
+                nextCalendar.set(Calendar.YEAR, alarmCalendar.getYear());
+                nextCalendar.set(Calendar.MONTH, alarmCalendar.getMonth() - 1);
+                nextCalendar.set(Calendar.DAY_OF_MONTH, alarmCalendar.getDay());
+                return nextCalendar;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取下一重复间隔的闹钟
+     *
+     * @return
+     */
     public Calendar getNextIntervalAlarm() {
         currentRepeatNum = 0;
         if (AlarmRepeatMode.isNowNotInRepeatModeDay(alarmRepeatMode)) return null;
@@ -124,9 +180,14 @@ public class AlarmSettingInfo implements Parcelable {
         return null;
     }
 
+    /**
+     * 获取播放音乐路径
+     *
+     * @return
+     */
     public String getPlayedSongPath() {
         if (checkedSongPaths == null) {
-            initSelectedSongPaths();
+            initCheckedSongPaths();
         }
         int size = checkedSongPaths.size();
         if (size == 0) {
@@ -149,6 +210,11 @@ public class AlarmSettingInfo implements Parcelable {
         return checkedSongPaths.get(index);
     }
 
+    /**
+     * 获取显示时间
+     *
+     * @return 显示时间
+     */
     public String getShowedTime() {
         String strMinute = String.valueOf(minute);
         String strHour = String.valueOf(hour);
@@ -162,7 +228,10 @@ public class AlarmSettingInfo implements Parcelable {
         return String.format("%s:%s", strHour, strMinute);
     }
 
-    private void initSelectedSongPaths() {
+    /**
+     * 初始化选中的音乐路径
+     */
+    private void initCheckedSongPaths() {
         checkedSongPaths = new ArrayList <>();
         for (SongInfo songInfo : songInfos) {
             if (songInfo.isSelect()) {
@@ -233,7 +302,7 @@ public class AlarmSettingInfo implements Parcelable {
 
     public void setSongInfos(ArrayList <SongInfo> songInfos) {
         this.songInfos = songInfos;
-        initSelectedSongPaths();
+        initCheckedSongPaths();
     }
 
     public ArrayList <AlarmRepeatMode> getAlarmRepeatMode() {

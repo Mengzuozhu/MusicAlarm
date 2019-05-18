@@ -8,10 +8,37 @@ import java.util.Locale;
 public class DateHelper {
     //分钟转为毫秒
     public final static int MINUTE_TO_MILLIS = 60000;
-    private static SimpleDateFormat df = new SimpleDateFormat("HH:mm", Locale.CHINA);//设置日期格式
+    private static SimpleDateFormat dfHHmm = new SimpleDateFormat("HH:mm", Locale.CHINA);//设置日期格式
+    private static SimpleDateFormat dfYmdHHmm = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);//设置日期格式
 
-    public static String format(Date date) {
-        return df.format(date);
+    /**
+     * 格式化成小时和分钟格式（HH:mm）
+     *
+     * @param date
+     * @return
+     */
+    public static String formatHHmm(Date date) {
+        return dfHHmm.format(date);
+    }
+
+    /**
+     * 格式化成日期、小时和分钟格式（yyyy-MM-dd HH:mm）
+     *
+     * @param date
+     * @return
+     */
+    public static String formatDateAndHHmm(Date date) {
+        return dfYmdHHmm.format(date);
+    }
+
+    /**
+     * 格式化成日期、小时和分钟格式（yyyy-MM-dd HH:mm）
+     *
+     * @param calendar
+     * @return
+     */
+    public static String formatDateAndHHmm(Calendar calendar) {
+        return formatDateAndHHmm(calendar.getTime());
     }
 
     public static Calendar getNowTime() {
