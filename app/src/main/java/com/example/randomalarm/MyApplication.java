@@ -16,16 +16,15 @@ import org.greenrobot.greendao.database.Database;
 public class MyApplication extends Application {
     private static DaoSession daoSession;
 
+    public static DaoSession getDaoSession() {
+        return daoSession;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
-//        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, this.getString(R.string.alarm_setting_db_name));
         UpgradeDbHelper helper = new UpgradeDbHelper(this, this.getString(R.string.alarm_setting_db_name));
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-    }
-
-    public static DaoSession getDaoSession() {
-        return daoSession;
     }
 }

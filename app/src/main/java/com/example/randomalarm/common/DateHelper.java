@@ -18,12 +18,20 @@ public class DateHelper {
         return Calendar.getInstance();
     }
 
+    public static long getNowInMillis() {
+        return getNowTime().getTimeInMillis();
+    }
+
     public static int getNowHour() {
         return getNowTime().get(Calendar.HOUR_OF_DAY);
     }
 
     public static int getNowMinute() {
         return getNowTime().get(Calendar.MINUTE);
+    }
+
+    public static int getCurYear() {
+        return getNowTime().get(Calendar.YEAR);
     }
 
     /**

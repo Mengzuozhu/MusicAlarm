@@ -74,10 +74,15 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
     }
 
     @Override
-    public void showSongPathsSetting(AlarmSettingInfo alarmSettingInfo) {
+    public void showSongPathsActivity(AlarmSettingInfo alarmSettingInfo) {
         Intent intent = getNewIntent(AlarmSongActivity.class);
         intent.putExtra(ringName, alarmSettingInfo);
-        startActivityForResult(intent, AlarmSettingActivity.RING_SET);
+        startActivityForResult(intent, AlarmSettingActivity.RING_SET_CODE);
+    }
+
+    @Override
+    public void showMultCalendarActivity(AlarmSettingInfo alarmSettingInfo) {
+
     }
 
     @Override
@@ -92,7 +97,7 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == AlarmSettingActivity.RING_SET && data != null) {
+        if (resultCode == AlarmSettingActivity.RING_SET_CODE && data != null) {
             AlarmSettingInfo alarmSettingInfo = data.getParcelableExtra(ringName);
             presenter.setAlarmSettingInfo(alarmSettingInfo);
         }

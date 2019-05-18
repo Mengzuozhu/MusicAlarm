@@ -7,7 +7,10 @@ import android.widget.TimePicker;
 
 import com.example.randomalarm.BasePresenter;
 import com.example.randomalarm.BaseView;
+import com.example.randomalarm.setting.AlarmCalendar;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+
+import java.util.ArrayList;
 
 /**
  * author : Mzz
@@ -26,8 +29,8 @@ public interface AlarmSettingContract {
 
         void save(AlarmSettingInfo alarmSettingInfo);
 
-        void showSongPathsSetting(AlarmSettingInfo alarmSettingInfo);
-
+        void showSongPathsActivity(AlarmSettingInfo alarmSettingInfo);
+        void showMultCalendarActivity(AlarmSettingInfo alarmSettingInfo);
         RecyclerView getRecyclerView();
     }
 
@@ -41,5 +44,6 @@ public interface AlarmSettingContract {
         void showSongPathsSetting();
 
         void setAlarmSettingInfo(AlarmSettingInfo alarmSettingInfo);
+        void setAlarmCalendar(ArrayList <AlarmCalendar> alarmCalendars);
     }
 }

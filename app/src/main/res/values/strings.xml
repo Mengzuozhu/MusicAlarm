@@ -34,6 +34,7 @@ C68.5809,277.075,273.832,71.8233,527.023,71.8233 Z
     <string name="remind_latter">稍后提醒</string>
     <string name="close_alarm">关闭闹钟</string>
     <string name="clear">清空</string>
+    <string name="title_activity_mult_calendar">闹钟日期</string>
     <integer name="circle_original_width">1062</integer>
     <integer name="circle_original_height">1062</integer>
 </resources>

@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.SearchView;
 
 import com.example.randomalarm.R;
@@ -173,11 +172,11 @@ public class AlarmSongActivity extends AppCompatActivity {
      * 保存
      */
     public void save() {
-        Intent intent = getIntent();
         setPlayMode();
         alarmSettingInfo.setSongInfos(songInfos);
+        Intent intent = getIntent();
         intent.putExtra(ringName, alarmSettingInfo);
-        setResult(AlarmSettingActivity.RING_SET, intent);
+        setResult(AlarmSettingActivity.RING_SET_CODE, intent);
     }
 
     private void setPlayMode() {

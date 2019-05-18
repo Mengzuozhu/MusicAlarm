@@ -1,12 +1,13 @@
 package com.example.randomalarm.multiCalendar;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -14,11 +15,16 @@ import android.widget.Toast;
 
 import com.example.randomalarm.R;
 import com.example.randomalarm.common.StringHelper;
+import com.example.randomalarm.common.ViewerHelper;
+import com.example.randomalarm.setting.AlarmCalendar;
+import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.haibin.calendarview.Calendar;
 import com.haibin.calendarview.CalendarLayout;
 import com.haibin.calendarview.CalendarView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -30,6 +36,8 @@ public class MultCalendarActivity extends AppCompatActivity implements
         CalendarView.OnYearChangeListener,
         CalendarView.OnMonthChangeListener {
 
+    public final static String ALARM_CALENDAR_DATA = "ALARM_CALENDAR_DATA";
+    public static final int MULT_CALENDAR_CODE = 5;
     private final static int MAX_MULTI_SELECT_SIZE = 200;
     @BindView(R.id.tv_month_day)
     TextView mTextMonthDay;
@@ -50,18 +58,39 @@ public class MultCalendarActivity extends AppCompatActivity implements
     Map <String, Calendar> schemeDate = new HashMap <>();
     int selectColor = R.color.colorAccent;
     Calendar nowDate;
+    ArrayList <AlarmCalendar> alarmCalendars;
     private int showYear;
-
-    public static void show(Context context) {
-        context.startActivity(new Intent(context, MultCalendarActivity.class));
-    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mult_calendar);
+        ViewerHelper.displayHomeAsUp(getSupportActionBar());
         ButterKnife.bind(this);
+
+        Intent intent = getIntent();
+        alarmCalendars = intent.getParcelableArrayListExtra(ALARM_CALENDAR_DATA);
         initView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_save, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        if (itemId == android.R.id.home) {
+            this.finish();
+            return true;
+        } else if (itemId == R.id.action_save) {
+            save();
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @SuppressLint("SetTextI18n")
@@ -108,10 +137,16 @@ public class MultCalendarActivity extends AppCompatActivity implements
     }
 
     public void addMultiSelect() {
-        Calendar schemeCalendar = getSchemeCalendar(2019, 5, 18, selectColor, "选");
-        schemeDate.put(schemeCalendar.toString(), schemeCalendar);
+        for (AlarmCalendar alarmCalendar : alarmCalendars) {
+            Calendar schemeCalendar = alarmCalendar.toCalendar();
+            schemeCalendar.setSchemeColor(selectColor);//如果单独标记颜色、则会使用这个颜色
+            schemeCalendar.setScheme("选");
+            schemeCalendar.addScheme(new Calendar.Scheme());
+//            Calendar schemeCalendar = getSchemeCalendar(2019, 5, 18, selectColor, "选");
+            schemeDate.put(schemeCalendar.toString(), schemeCalendar);
+            mCalendarView.putMultiSelect(schemeCalendar);
+        }
         mCalendarView.setSchemeDate(schemeDate);
-        mCalendarView.putMultiSelect(schemeCalendar);
     }
 
     private Calendar getSchemeCalendar(int year, int month, int day, int color, String text) {
@@ -125,6 +160,15 @@ public class MultCalendarActivity extends AppCompatActivity implements
         return calendar;
     }
 
+    private void save() {
+        ArrayList <AlarmCalendar> selectAlarmCalendar = new ArrayList <>();
+        for (Calendar calendar : schemeDate.values()) {
+            selectAlarmCalendar.add(AlarmCalendar.calendarToThis(calendar));
+        }
+        Intent intent = getIntent();
+        intent.putParcelableArrayListExtra(ALARM_CALENDAR_DATA, selectAlarmCalendar);
+        setResult(MULT_CALENDAR_CODE, intent);
+    }
     @Override
     public void onCalendarMultiSelectOutOfRange(Calendar calendar) {
         Log.e("OutOfRange", "OutOfRange" + calendar);

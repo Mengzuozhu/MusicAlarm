@@ -10,7 +10,7 @@
         android:id="@+id/rl_tool"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/colorWhite"
         tools:layout_editor_absoluteX="-39dp">
 
         <TextView

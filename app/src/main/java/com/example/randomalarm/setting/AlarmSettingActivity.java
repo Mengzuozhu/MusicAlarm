@@ -15,8 +15,11 @@ import com.example.randomalarm.R;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
+import com.example.randomalarm.multiCalendar.MultCalendarActivity;
 import com.example.randomalarm.presenter.AlarmSettingPresenter;
 import com.example.randomalarm.song.AlarmSongActivity;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +29,7 @@ import butterknife.ButterKnife;
  */
 public class AlarmSettingActivity extends AppCompatActivity implements AlarmSettingContract.View {
 
-    public static final int RING_SET = 4;
+    public static final int RING_SET_CODE = 4;
     public static final String ALARM_SETTING_INFO = "AlarmSettingInfo";
     @BindView(R.id.tp_setting)
     TimePicker timePicker;
@@ -85,10 +88,17 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
     }
 
     @Override
-    public void showSongPathsSetting(AlarmSettingInfo alarmSettingInfo) {
+    public void showSongPathsActivity(AlarmSettingInfo alarmSettingInfo) {
         Intent intent = getNewIntent(AlarmSongActivity.class);
         intent.putExtra(ringName, alarmSettingInfo);
-        startActivityForResult(intent, RING_SET);
+        startActivityForResult(intent, RING_SET_CODE);
+    }
+
+    @Override
+    public void showMultCalendarActivity(AlarmSettingInfo alarmSettingInfo) {
+        Intent intent = getNewIntent(MultCalendarActivity.class);
+        intent.putParcelableArrayListExtra(MultCalendarActivity.ALARM_CALENDAR_DATA, alarmSettingInfo.getAlarmCalendars());
+        startActivityForResult(intent, MultCalendarActivity.MULT_CALENDAR_CODE);
     }
 
     @Override
@@ -103,9 +113,15 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RING_SET && data != null) {
+        if (data == null) {
+            return;
+        }
+        if (resultCode == RING_SET_CODE) {
             AlarmSettingInfo alarmSettingInfo = data.getParcelableExtra(ringName);
             presenter.setAlarmSettingInfo(alarmSettingInfo);
+        }else if (resultCode == MultCalendarActivity.MULT_CALENDAR_CODE) {
+            ArrayList <AlarmCalendar> selectAlarmCalendar = data.getParcelableArrayListExtra(MultCalendarActivity.ALARM_CALENDAR_DATA);
+            presenter.setAlarmCalendar(selectAlarmCalendar);
         }
     }
 

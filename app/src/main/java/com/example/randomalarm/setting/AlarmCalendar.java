@@ -3,7 +3,9 @@ package com.example.randomalarm.setting;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.JsonConverter;
+import com.example.randomalarm.common.StringHelper;
 import com.haibin.calendarview.Calendar;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
@@ -15,7 +17,7 @@ import java.util.ArrayList;
  * date : 2019 2019/5/17 21:54
  * description :
  */
-public class AlarmCalendar implements Parcelable {
+public class AlarmCalendar implements Parcelable, Comparable <AlarmCalendar> {
 
     public static final Parcelable.Creator <AlarmCalendar> CREATOR = new Parcelable.Creator <AlarmCalendar>() {
         @Override
@@ -64,6 +66,26 @@ public class AlarmCalendar implements Parcelable {
         return new AlarmCalendar(calendar.getYear(), calendar.getMonth(), calendar.getDay());
     }
 
+    public static ArrayList <AlarmCalendar> removeInvalidDate(ArrayList <AlarmCalendar> alarmCalendars) {
+        if (alarmCalendars == null) {
+            return null;
+        }
+        for (int i = alarmCalendars.size() - 1; i >= 0; i--) {
+            if (alarmCalendars.get(i).isOutOfDate()) {
+                alarmCalendars.remove(i);
+            }
+        }
+        return alarmCalendars;
+    }
+
+    public boolean isCurYear() {
+        return year == DateHelper.getCurYear();
+    }
+
+    public boolean isOutOfDate() {
+        return toCalendar().getTimeInMillis() < DateHelper.getNowInMillis();
+    }
+
     public int getYear() {
         return year;
     }
@@ -88,6 +110,15 @@ public class AlarmCalendar implements Parcelable {
         this.day = day;
     }
 
+    @Override
+    public String toString() {
+        return StringHelper.getLocalFormat("%d/%d/%d", year, month, day);
+    }
+
+    public String toMonthAndDayString() {
+        return StringHelper.getLocalFormat("%d/%d", month, day);
+    }
+
     public Calendar toCalendar() {
         Calendar calendar = new Calendar();
         calendar.setYear(year);
@@ -106,6 +137,31 @@ public class AlarmCalendar implements Parcelable {
         dest.writeInt(this.year);
         dest.writeInt(this.month);
         dest.writeInt(this.day);
+    }
+
+    @Override
+    public int compareTo(AlarmCalendar o) {
+        if (o == null) {
+            throw new NullPointerException();
+        }
+        if (this.year > o.year) {
+            return 1;
+        } else if (this.year < o.year) {
+            return -1;
+        }
+
+        if (this.month > o.month) {
+            return 1;
+        } else if (this.month < o.month) {
+            return -1;
+        }
+
+        if (this.day > o.day) {
+            return 1;
+        } else if (this.day < o.day) {
+            return -1;
+        }
+        return 0;
     }
 
     public static class Converter implements PropertyConverter <ArrayList <AlarmCalendar>, String> {

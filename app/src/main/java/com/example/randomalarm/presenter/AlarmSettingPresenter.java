@@ -15,11 +15,13 @@ import com.example.randomalarm.adapter.MultipleItem;
 import com.example.randomalarm.adapter.MultipleItemQuickAdapter;
 import com.example.randomalarm.common.StringHelper;
 import com.example.randomalarm.contract.AlarmSettingContract;
+import com.example.randomalarm.setting.AlarmCalendar;
 import com.example.randomalarm.setting.AlarmRepeatMode;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 import com.example.randomalarm.song.SongInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,8 +37,10 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     private static final String DURATION_NAME = "响铃时长";
     private static final String REPEAT_FREQUENCY_NAME = "重复响铃次数";
     private static final String VIBRATED = "振动";
+    private static final String CALENDAR = "日期";
     private static final String CANCEL_NAME = "取消";
     private static final String CONFIRM = "确定";
+    ArrayList <AlarmCalendar> alarmCalendars;
     private MultipleItemQuickAdapter multipleItemAdapter;
     private AlarmSettingContract.View view;
     private AlarmSettingInfo alarmSettingInfo;
@@ -65,13 +69,16 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         interval = alarmSettingInfo.getInterval();
         duration = alarmSettingInfo.getDuration();
         repeatFrequency = alarmSettingInfo.getRepeatFrequency();
+        alarmCalendars = alarmSettingInfo.getAlarmCalendars();
+        alarmCalendars = AlarmCalendar.removeInvalidDate(alarmCalendars);
+        Collections.sort(alarmCalendars);
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatInfo(alarmRepeatModes)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getSongPlayModeInfo()));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getIntervalInfo(interval)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
         settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
-        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, "日期："));
+        settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getAlarmCalendarsInfo()));
         initAdapter(settings);
     }
 
@@ -127,6 +134,26 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         return StringHelper.getLocalFormat("%s：%d", REPEAT_FREQUENCY_NAME, repeatNumber);
     }
 
+    private String getAlarmCalendarsInfo() {
+        StringBuilder info = new StringBuilder(CALENDAR);
+        info.append("：");
+        int size = alarmCalendars.size();
+        for (int i = 0; i < size && i < 3; i++) {
+            AlarmCalendar alarmCalendar = alarmCalendars.get(i);
+            if (alarmCalendar.isCurYear()) {
+                info.append(alarmCalendar.toMonthAndDayString());
+            } else {
+                info.append(alarmCalendar.toString());
+            }
+            info.append(" ");
+        }
+
+        if (size > 3) {
+            info.append("...");
+        }
+        return info.toString();
+    }
+
     private String[] getIntervals() {
         int len = 6;
         String[] intervals = new String[len];
@@ -158,8 +185,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
             case 4:
                 showRepeatFrequencyDialog(textView);
                 break;
-            case 5:
-                showDatePicker();
+            case 6:
+                view.showMultCalendarActivity(alarmSettingInfo);
                 break;
         }
     }
@@ -239,10 +266,6 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         return numberPicker;
     }
 
-    private void showDatePicker() {
-
-    }
-
     @Override
     public void saveAlarmSetting() {
         TimePicker timePicker = view.getTimePicker();
@@ -270,12 +293,18 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
 
     @Override
     public void showSongPathsSetting() {
-        view.showSongPathsSetting(alarmSettingInfo);
+        view.showSongPathsActivity(alarmSettingInfo);
     }
 
     @Override
     public void setAlarmSettingInfo(AlarmSettingInfo alarmSettingInfo) {
         this.alarmSettingInfo = alarmSettingInfo;
+        initAlarm();
+    }
+
+    @Override
+    public void setAlarmCalendar(ArrayList <AlarmCalendar> alarmCalendars) {
+        this.alarmSettingInfo.setAlarmCalendars(alarmCalendars);
         initAlarm();
     }
 

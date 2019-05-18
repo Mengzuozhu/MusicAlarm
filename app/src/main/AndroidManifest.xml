@@ -16,14 +16,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".multiCalendar.MultCalendarActivity"
-            android:launchMode="singleTask">
-            <!--<intent-filter>-->
-                <!--<action android:name="android.intent.action.MAIN" />-->
-
-                <!--<category android:name="android.intent.category.LAUNCHER" />-->
-
-                <!--<action android:name="android.intent.action.VIEW" />-->
-            <!--</intent-filter>-->
+            android:launchMode="singleTask"
+            android:label="@string/title_activity_mult_calendar">
         </activity>
 
         <activity
