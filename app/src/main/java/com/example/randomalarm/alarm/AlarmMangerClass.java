@@ -10,6 +10,8 @@ import android.util.Log;
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.example.randomalarm.model.AlarmSettingModel;
+import com.example.randomalarm.notify.NotificationReceiver;
+import com.example.randomalarm.setting.AlarmCalendar;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
 import java.util.Calendar;
@@ -49,18 +51,19 @@ public class AlarmMangerClass {
     public void intiAllAlarms(List <AlarmSettingInfo> sortedAlarmInfos) {
         for (AlarmSettingInfo sortedAlarmInfo : sortedAlarmInfos) {
             if (sortedAlarmInfo.getIsOpenStatus()) {
-                setNextDayFirstAlarm(sortedAlarmInfo, false);
+                AlarmCalendar.removeInvalidDate(sortedAlarmInfo.getAlarmCalendars());
+                setFirstAlarm(sortedAlarmInfo, false);
             }
         }
     }
 
     /**
-     * 设置下一天的闹钟
+     * 设置闹钟的第一个提醒时间
      *
      * @param alarmSettingInfo
      * @param isShowRemind     是否提示响铃时间
      */
-    public void setNextDayFirstAlarm(AlarmSettingInfo alarmSettingInfo, boolean isShowRemind) {
+    public void setFirstAlarm(AlarmSettingInfo alarmSettingInfo, boolean isShowRemind) {
         if (isAlarmClosed(alarmSettingInfo)) return;
 
         int hour = alarmSettingInfo.getHour();
@@ -74,9 +77,7 @@ public class AlarmMangerClass {
             nextCalendar.add(Calendar.DATE, 1);
         }
         nextCalendar = alarmSettingInfo.getNextAlarmDate(nextCalendar);
-        Log.w("nextCalendar", DateHelper.formatDateAndHHmm(nextCalendar));
         setAlarm(alarmSettingInfo, nextCalendar, isShowRemind);
-//        setNotification(nextCalendar);
     }
 
     /**
@@ -90,7 +91,7 @@ public class AlarmMangerClass {
         Calendar calendar = alarmSettingInfo.getNextIntervalAlarm();
         if (calendar == null) {
             //当天不存在下一间隔闹钟，则直接设置下一天闹钟
-            setNextDayFirstAlarm(alarmSettingInfo, false);
+            setFirstAlarm(alarmSettingInfo, false);
         } else {
             setAlarm(alarmSettingInfo, calendar, false);
         }
@@ -111,7 +112,11 @@ public class AlarmMangerClass {
     }
 
     private void setAlarm(AlarmSettingInfo alarmSettingInfo, Calendar calendar, boolean isShowRemind) {
-//        calendar.add(Calendar.SECOND, -50);
+        if (calendar == null) {
+            return;
+        }
+
+        Log.w("nextCalendar", DateHelper.formatDateAndHHmm(calendar));
         long nextTimeInMillis = calendar.getTimeInMillis();
         long nowMillis = System.currentTimeMillis();
         long diffMillis = nextTimeInMillis - nowMillis;
@@ -119,29 +124,33 @@ public class AlarmMangerClass {
             String diff = DateHelper.getAlarmRemainedTime(diffMillis);
             ViewerHelper.showToast(context, diff);
         }
-        PendingIntent pi = getPendingIntent(alarmSettingInfo.getId());
+        PendingIntent pi = getAlarmPendingIntent(alarmSettingInfo.getId());
+//        PendingIntent pi = getNotifyPendingIntent(alarmSettingInfo.getId());
         //先取消之前的闹钟
         alarmManager.cancel(pi);
         setAlarmTime(alarmManager, pi, nextTimeInMillis);
     }
 
-    private PendingIntent getPendingIntent(Long id) {
-        Intent intent = new Intent(context, AlarmRemindActivity.class);
-        //可能在服务中启动activity，所以需要添加这个标记
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra(AlarmRemindActivity.ALARM_ID, id.longValue());
+    private PendingIntent getAlarmPendingIntent(Long id) {
+//        Intent intent = new Intent(context, AlarmRemindActivity.class);
+//        //可能在服务中启动activity，所以需要添加这个标记
+//        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        intent.putExtra(AlarmConstant.ALARM_ID, id.longValue());
+        Intent intent = getIntent(id, AlarmRemindActivity.class);
         return PendingIntent.getActivity(context, id.intValue(), intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
-    private void setNotification(Calendar nextCalendar) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(nextCalendar.getTimeInMillis());
-//        calendar.add(Calendar.HOUR_OF_DAY, 1);
-        calendar.add(Calendar.SECOND, 15);
-        if (calendar.compareTo(DateHelper.getNowTime()) > 0) {
-            NotificationUtils notificationUtils = new NotificationUtils(context);
-            notificationUtils.sendNotification("闹钟提醒", "下一个闹钟将于1小时内响起", calendar.getTimeInMillis());
-        }
+    private PendingIntent getNotifyPendingIntent(Long id) {
+        Intent intent = getIntent(id, NotificationReceiver.class);
+        return PendingIntent.getBroadcast(context, id.intValue(),
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private Intent getIntent(Long id, Class <?> cls) {
+        Intent intent = new Intent(context, cls);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(AlarmConstant.ALARM_ID, id.longValue());
+        return intent;
     }
 
     /**
@@ -150,7 +159,7 @@ public class AlarmMangerClass {
      * @param id
      */
     public void cancelAlarm(Long id) {
-        PendingIntent pi = getPendingIntent(id);
+        PendingIntent pi = getAlarmPendingIntent(id);
         alarmManager.cancel(pi);
     }
 

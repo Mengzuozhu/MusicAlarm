@@ -46,7 +46,7 @@ public class MainPresenter implements MainContract.Presenter {
     @Override
     public void insertOrReplace(AlarmSettingInfo alarmSettingInfo) {
         AlarmSettingModel.insertOrReplace(alarmSettingInfo);
-        alarmHandler.setNextDayFirstAlarm(alarmSettingInfo, true);
+        alarmHandler.setFirstAlarm(alarmSettingInfo, true);
     }
 
     @Override

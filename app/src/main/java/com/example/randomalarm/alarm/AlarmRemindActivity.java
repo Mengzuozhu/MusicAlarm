@@ -34,7 +34,6 @@ import tyrantgit.explosionfield.ExplosionField;
 
 public class AlarmRemindActivity extends AppCompatActivity {
 
-    public static final String ALARM_ID = "ALARM_ID";
     private static final int CLOSE_DELAY = 500;
     @BindView(R.id.tv_remind)
     TextView tvRemind;
@@ -81,7 +80,7 @@ public class AlarmRemindActivity extends AppCompatActivity {
 
         mExplosionField = ExplosionField.attach2Window(this);
         Intent intent = getIntent();
-        long alarmId = intent.getLongExtra(ALARM_ID, -1);
+        long alarmId = intent.getLongExtra(AlarmConstant.ALARM_ID, -1);
         if (alarmId == -1) {
             return;
         }
@@ -139,7 +138,7 @@ public class AlarmRemindActivity extends AppCompatActivity {
      * 设置下一天的闹钟
      */
     public void setNextDayFirstAlarm() {
-        new AlarmMangerClass(AlarmRemindActivity.this).setNextDayFirstAlarm(alarmSettingInfo, false);
+        new AlarmMangerClass(AlarmRemindActivity.this).setFirstAlarm(alarmSettingInfo, false);
         closeInTime(CLOSE_DELAY);
     }
 

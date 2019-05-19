@@ -65,7 +65,10 @@ public class DefaultSettingActivity extends AppCompatActivity implements AlarmSe
      */
     @Override
     public void save(AlarmSettingInfo alarmSettingInfo) {
-        defaultSettingModel.insertOrReplace(alarmSettingInfo);
+        DefaultSetting defaultSetting = new DefaultSetting();
+        defaultSetting.setAlarmSettingInfo(alarmSettingInfo);
+        defaultSetting.setRemindImagePath("BackgroundImagePath");
+        defaultSettingModel.insertOrReplace(defaultSetting);
     }
 
     @Override

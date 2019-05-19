@@ -10,9 +10,32 @@ import android.os.Parcelable;
  * description :
  */
 public class SongInfo implements Parcelable {
+    public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
+        @Override
+        public SongInfo createFromParcel(Parcel source) {
+            return new SongInfo(source);
+        }
+
+        @Override
+        public SongInfo[] newArray(int size) {
+            return new SongInfo[size];
+        }
+    };
     private String name;
     private String path;
     private boolean isSelect;
+
+    public SongInfo(String name, String path, boolean isSelect) {
+        this.name = name;
+        this.path = path;
+        this.isSelect = isSelect;
+    }
+
+    protected SongInfo(Parcel in) {
+        this.name = in.readString();
+        this.path = in.readString();
+        this.isSelect = in.readByte() != 0;
+    }
 
     public boolean isSelect() {
         return isSelect;
@@ -20,12 +43,6 @@ public class SongInfo implements Parcelable {
 
     public void setSelect(boolean select) {
         isSelect = select;
-    }
-
-    public SongInfo(String name, String path, boolean isSelect) {
-        this.name = name;
-        this.path = path;
-        this.isSelect = isSelect;
     }
 
     public String getName() {
@@ -55,22 +72,4 @@ public class SongInfo implements Parcelable {
         dest.writeString(this.path);
         dest.writeByte(this.isSelect ? (byte) 1 : (byte) 0);
     }
-
-    protected SongInfo(Parcel in) {
-        this.name = in.readString();
-        this.path = in.readString();
-        this.isSelect = in.readByte() != 0;
-    }
-
-    public static final Creator <SongInfo> CREATOR = new Creator <SongInfo>() {
-        @Override
-        public SongInfo createFromParcel(Parcel source) {
-            return new SongInfo(source);
-        }
-
-        @Override
-        public SongInfo[] newArray(int size) {
-            return new SongInfo[size];
-        }
-    };
 }

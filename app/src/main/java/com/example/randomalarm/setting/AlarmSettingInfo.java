@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.example.randomalarm.common.DateHelper;
+import com.example.randomalarm.common.JsonConverter;
 import com.example.randomalarm.song.SongInfo;
 import com.example.randomalarm.song.SongInfoListConverter;
 
@@ -12,6 +13,7 @@ import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Transient;
+import org.greenrobot.greendao.converter.PropertyConverter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,6 +62,7 @@ public class AlarmSettingInfo implements Parcelable {
     //播放模式
     @Convert(columnType = Integer.class, converter = SongPlayedMode.SongPlayedModeConverter.class)
     private SongPlayedMode songPlayedMode = SongPlayedMode.random;
+    //闹钟日期
     @Convert(columnType = String.class, converter = AlarmCalendar.Converter.class)
     private ArrayList <AlarmCalendar> alarmCalendars = new ArrayList <>();
     @Transient
@@ -114,6 +117,7 @@ public class AlarmSettingInfo implements Parcelable {
      * @return
      */
     public Calendar getNextAlarmDate(Calendar nextCalendar) {
+        alarmCalendars = AlarmCalendar.removeInvalidDate(alarmCalendars);
         //首选闹钟日期
         if (alarmCalendars != null && alarmCalendars.size() > 0) {
             return getNextAlarmDateByCalendar(nextCalendar);
@@ -145,6 +149,9 @@ public class AlarmSettingInfo implements Parcelable {
         Collections.sort(alarmCalendars);
         for (int i = 0; i < alarmCalendars.size(); i++) {
             AlarmCalendar alarmCalendar = alarmCalendars.get(i);
+            if (alarmCalendar.isOutOfDate()) {
+                continue;
+            }
             //获取下一个闹钟日期
             if (nextCalendar.compareTo(alarmCalendar.toCalendar()) <= 0) {
                 nextCalendar.set(Calendar.YEAR, alarmCalendar.getYear());
@@ -356,5 +363,18 @@ public class AlarmSettingInfo implements Parcelable {
         dest.writeTypedList(this.songInfos);
         dest.writeInt(this.songPlayedMode == null ? -1 : this.songPlayedMode.ordinal());
         dest.writeTypedList(this.alarmCalendars);
+    }
+
+    public static class Converter implements PropertyConverter <AlarmSettingInfo, String> {
+
+        @Override
+        public AlarmSettingInfo convertToEntityProperty(String databaseValue) {
+            return JsonConverter.jsonToClass(databaseValue, AlarmSettingInfo.class);
+        }
+
+        @Override
+        public String convertToDatabaseValue(AlarmSettingInfo entityProperty) {
+            return JsonConverter.convertToDatabaseValue(entityProperty);
+        }
     }
 }

@@ -30,7 +30,9 @@ public interface AlarmSettingContract {
         void save(AlarmSettingInfo alarmSettingInfo);
 
         void showSongPathsActivity(AlarmSettingInfo alarmSettingInfo);
+
         void showMultCalendarActivity(AlarmSettingInfo alarmSettingInfo);
+
         RecyclerView getRecyclerView();
     }
 
@@ -44,6 +46,7 @@ public interface AlarmSettingContract {
         void showSongPathsSetting();
 
         void setAlarmSettingInfo(AlarmSettingInfo alarmSettingInfo);
+
         void setAlarmCalendar(ArrayList <AlarmCalendar> alarmCalendars);
     }
 }

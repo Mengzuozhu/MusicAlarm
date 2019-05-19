@@ -40,7 +40,7 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     private static final String CALENDAR = "日期";
     private static final String CANCEL_NAME = "取消";
     private static final String CONFIRM = "确定";
-    ArrayList <AlarmCalendar> alarmCalendars;
+    private ArrayList <AlarmCalendar> alarmCalendars;
     private MultipleItemQuickAdapter multipleItemAdapter;
     private AlarmSettingContract.View view;
     private AlarmSettingInfo alarmSettingInfo;
@@ -58,6 +58,11 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void initAlarm() {
+        List <MultipleItem> settings = getSettings();
+        initAdapter(settings);
+    }
+
+    protected List <MultipleItem> getSettings() {
         List <MultipleItem> settings = new ArrayList <>();
         TimePicker timePicker = view.getTimePicker();
         if (timePicker != null) {
@@ -79,14 +84,13 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getDurationInfo(duration)));
         settings.add(new MultipleItem(MultipleItem.RIGHT_BUTTON, getRepeatFrequencyInfo(repeatFrequency)));
         settings.add(new MultipleItem(MultipleItem.SWITCH, VIBRATED, alarmSettingInfo.getIsVibrated()));
-        initAdapter(settings);
+        return settings;
     }
 
-    private void initAdapter(List <MultipleItem> settings) {
-        final int tvSettingName = R.id.tv_setting_name;
+    protected void initAdapter(List <MultipleItem> settings) {
         multipleItemAdapter = new MultipleItemQuickAdapter(settings);
         multipleItemAdapter.setOnItemClickListener((adapter1, view, position) -> {
-            TextView textView = view.findViewById(tvSettingName);
+            TextView textView = view.findViewById(R.id.tv_setting_name);
             showSetting(position, textView);
         });
         RecyclerView recyclerView = view.getRecyclerView();
@@ -150,6 +154,8 @@ public class AlarmSettingPresenter implements AlarmSettingContract.Presenter {
 
         if (size > 3) {
             info.append("...");
+        } else if (size == 0) {
+            info.append("无");
         }
         return info.toString();
     }

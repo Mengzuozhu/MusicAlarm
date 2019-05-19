@@ -4,11 +4,13 @@ import android.content.Context;
 
 import com.example.randomalarm.R;
 import com.example.randomalarm.common.DateHelper;
-import com.example.randomalarm.greendao.db.AlarmSettingInfoDao;
+import com.example.randomalarm.common.UpgradeDbHelper;
 import com.example.randomalarm.greendao.db.DaoMaster;
 import com.example.randomalarm.greendao.db.DaoSession;
+import com.example.randomalarm.greendao.db.DefaultSettingDao;
 import com.example.randomalarm.setting.AlarmRepeatMode;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.example.randomalarm.setting.DefaultSetting;
 
 import org.greenrobot.greendao.database.Database;
 
@@ -21,14 +23,13 @@ import java.util.List;
  */
 public class DefaultSettingModel {
     private DaoSession daoSession;
-    private AlarmSettingInfoDao alarmSettingInfoDao;
+    private DefaultSettingDao defaultSettingDao;
 
     public DefaultSettingModel(Context context) {
-        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(context,
-                context.getString(R.string.default_alarm_setting_db_name));
+        UpgradeDbHelper helper = new UpgradeDbHelper(context, context.getString(R.string.default_alarm_setting_db_name));
         Database db = helper.getWritableDb();
         daoSession = new DaoMaster(db).newSession();
-        alarmSettingInfoDao = daoSession.getAlarmSettingInfoDao();
+        defaultSettingDao = daoSession.getDefaultSettingDao();
     }
 
     public AlarmSettingInfo loadDefaultAlarmSetting() {
@@ -45,11 +46,11 @@ public class DefaultSettingModel {
         return defaultSetting;
     }
 
-    public void insertOrReplace(AlarmSettingInfo alarmSettingInfo) {
-        if (alarmSettingInfo == null) {
+    public void insertOrReplace(DefaultSetting defaultSetting) {
+        if (defaultSetting == null) {
             return;
         }
-        alarmSettingInfoDao.insertOrReplace(alarmSettingInfo);
+        defaultSettingDao.insertOrReplace(defaultSetting);
     }
 
 }

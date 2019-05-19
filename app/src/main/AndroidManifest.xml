@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.randomalarm">
-    <!-- <uses-permission android:channelName="android.permission.WRITE_EXTERNAL_STORAGE" /> -->
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -14,12 +15,11 @@
         android:roundIcon="@mipmap/app_alarm"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ImagePickerActivity"></activity>
         <activity
             android:name=".multiCalendar.MultCalendarActivity"
-            android:launchMode="singleTask"
-            android:label="@string/title_activity_mult_calendar">
-        </activity>
-
+            android:label="@string/title_activity_mult_calendar"
+            android:launchMode="singleTask" />
         <activity
             android:name=".setting.DefaultSettingActivity"
             android:label="@string/title_activity_default_setting" />
@@ -62,6 +62,8 @@
             </intent-filter>
         </receiver>
         <receiver android:name=".alarm.TimeTickReceiver" />
+        <receiver android:name=".notify.AlarmNotification" />
+        <receiver android:name=".notify.NotificationReceiver" />
 
         <service android:name=".alarm.AlarmInitService" />
     </application>

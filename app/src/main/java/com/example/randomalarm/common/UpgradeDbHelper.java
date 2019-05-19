@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.example.randomalarm.greendao.db.AlarmSettingInfoDao;
 import com.example.randomalarm.greendao.db.DaoMaster;
+import com.example.randomalarm.greendao.db.DefaultSettingDao;
 
 /**
  * 升级greendao数据库
@@ -24,7 +25,7 @@ public class UpgradeDbHelper extends DaoMaster.OpenHelper {
 
         if (oldVersion < newVersion) {
             Log.i("greenDAO", "Upgrading schema from version " + oldVersion + " to " + newVersion + " by migrating all tables data");
-            MigrationHelper.migrate(db, AlarmSettingInfoDao.class);
+            MigrationHelper.migrate(db, AlarmSettingInfoDao.class, DefaultSettingDao.class);
         }
     }
 }

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_notify_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="10dp"
+        android:text="音乐闹钟"
+        android:textSize="@dimen/font_18" />
+
+    <TextView
+        android:id="@+id/tv_notify_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_notify_title"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="5dp"
+        android:text="08:00"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_notify_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="20dp"
+        android:text="关闭"
+        android:textSize="@dimen/font_18" />
+
+
+    <TextView
+        android:id="@+id/tv_notify_remind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="70dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toStartOf="@+id/tv_notify_close"
+        android:text="稍后提醒"
+        android:textSize="@dimen/font_18" />
+
+    <ImageView
+        android:id="@+id/iv_notify"
+        android:layout_width="20dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_notify_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="0dp"
+        app:srcCompat="@mipmap/app_alarm" />
+
+</RelativeLayout>

@@ -102,11 +102,13 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
     @OnClick(R.id.fab_alarm_add)
     public void addAlarm_onClick(View view) {
-        AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
-        showAlarmSetting(alarmSettingInfo);
+//        AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
+//        showAlarmSetting(alarmSettingInfo);
 //        this.finish();
 //        NotificationUtils notificationUtils = new NotificationUtils(this);
 //        notificationUtils.sendNotification("测试标题", "测试内容");
+        Intent intent = getNewIntent(ImagePickerActivity.class);
+        startActivity(intent);
     }
 
     private void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {
