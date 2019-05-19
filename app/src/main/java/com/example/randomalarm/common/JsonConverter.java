@@ -33,7 +33,7 @@ public class JsonConverter<T> {
         return new Gson().fromJson(databaseValue, (Type) classOfT);
     }
 
-    public static <T> String convertToDatabaseValue(@Nullable Object entityProperty) {
+    public static <T> String convertToStringValue(@Nullable Object entityProperty) {
         if (entityProperty == null) {
             return "";
         } else {

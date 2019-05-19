@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_default"
+        android:orderInCategory="2"
+        android:title="默认"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_select"
+        android:orderInCategory="2"
+        android:title="选择"
+        app:showAsAction="ifRoom" />
+</menu>

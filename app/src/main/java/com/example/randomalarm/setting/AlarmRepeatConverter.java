@@ -1,7 +1,6 @@
 package com.example.randomalarm.setting;
 
 import com.example.randomalarm.common.JsonConverter;
-import com.example.randomalarm.song.SongInfo;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -25,6 +24,6 @@ public class AlarmRepeatConverter implements PropertyConverter <ArrayList <Alarm
 
     @Override
     public String convertToDatabaseValue(ArrayList <AlarmRepeatMode> entityProperty) {
-        return JsonConverter.convertToDatabaseValue(entityProperty);
+        return JsonConverter.convertToStringValue(entityProperty);
     }
 }

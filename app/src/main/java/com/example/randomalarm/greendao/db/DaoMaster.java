@@ -22,13 +22,11 @@ public class DaoMaster extends AbstractDaoMaster {
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
         AlarmSettingInfoDao.createTable(db, ifNotExists);
-        DefaultSettingDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
         AlarmSettingInfoDao.dropTable(db, ifExists);
-        DefaultSettingDao.dropTable(db, ifExists);
     }
 
     /**
@@ -48,7 +46,6 @@ public class DaoMaster extends AbstractDaoMaster {
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
         registerDaoClass(AlarmSettingInfoDao.class);
-        registerDaoClass(DefaultSettingDao.class);
     }
 
     public DaoSession newSession() {

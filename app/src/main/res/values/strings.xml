@@ -7,6 +7,7 @@
     <string name="title_activity_song_picker">添加铃声</string>
     <string name="title_activity_default_setting">默认闹钟</string>
     <string name="title_activity_mult_calendar">闹钟日期</string>
+    <string name="title_app_setting">配置</string>
     <string name="repeat_name">重复</string>
     <string name="ring_name">铃声</string>
     <string name="alarm_setting_db_name">T_ALARM_SETTING</string>

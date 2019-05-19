@@ -374,7 +374,7 @@ public class AlarmSettingInfo implements Parcelable {
 
         @Override
         public String convertToDatabaseValue(AlarmSettingInfo entityProperty) {
-            return JsonConverter.convertToDatabaseValue(entityProperty);
+            return JsonConverter.convertToStringValue(entityProperty);
         }
     }
 }

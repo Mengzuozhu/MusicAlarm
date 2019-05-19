@@ -1,4 +1,4 @@
-package com.example.randomalarm.setting;
+package com.example.randomalarm.common;
 
 import android.Manifest;
 import android.support.annotation.NonNull;
@@ -17,7 +17,7 @@ import com.zhihu.matisse.engine.impl.GlideEngine;
  */
 public class MatisseHelper {
 
-    public static final int REQUEST_CODE_CHOOSE = 23;
+    public static final int REQUEST_CODE_CHOOSE = 9527;
 
     public static void showMatisse(@NonNull FragmentActivity activity, int requestCode) {
         RxPermissions rxPermissions = new RxPermissions(activity);
@@ -33,8 +33,7 @@ public class MatisseHelper {
     private static void initMatisse(@NonNull FragmentActivity activity, int requestCode) {
         Matisse.from(activity)
                 .choose(MimeType.ofImage())
-                .countable(true)
-                .maxSelectable(1)
+                .countable(false)
                 .imageEngine(new GlideEngine())
                 .forResult(requestCode);
     }

@@ -1,7 +1,6 @@
 package com.example.randomalarm.song;
 
 import com.example.randomalarm.common.JsonConverter;
-import com.example.randomalarm.song.SongInfo;
 
 import org.greenrobot.greendao.converter.PropertyConverter;
 
@@ -21,6 +20,6 @@ public class SongInfoListConverter implements PropertyConverter <ArrayList <Song
 
     @Override
     public String convertToDatabaseValue(ArrayList <SongInfo> entityProperty) {
-        return JsonConverter.convertToDatabaseValue(entityProperty);
+        return JsonConverter.convertToStringValue(entityProperty);
     }
 }

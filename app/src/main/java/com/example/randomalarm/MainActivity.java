@@ -69,18 +69,25 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit, menu);
-        getMenuInflater().inflate(R.menu.menu_default_setting, menu);
+        getMenuInflater().inflate(R.menu.menu_setting, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_default_setting) {
-            Intent intent = getNewIntent(DefaultSettingActivity.class);
-            startActivity(intent);
-        } else if (id == R.id.action_edit) {
-            showEditActivity();
+        switch (id) {
+            case R.id.action_default_setting:
+                Intent intent = getNewIntent(DefaultSettingActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.action_edit:
+                showEditActivity();
+                break;
+            case R.id.action_app_setting:
+                Intent intent1 = getNewIntent(AppSettingActivity.class);
+                startActivity(intent1);
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -102,13 +109,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
      */
     @OnClick(R.id.fab_alarm_add)
     public void addAlarm_onClick(View view) {
-//        AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
-//        showAlarmSetting(alarmSettingInfo);
-//        this.finish();
-//        NotificationUtils notificationUtils = new NotificationUtils(this);
-//        notificationUtils.sendNotification("测试标题", "测试内容");
-        Intent intent = getNewIntent(ImagePickerActivity.class);
-        startActivity(intent);
+        AlarmSettingInfo alarmSettingInfo = presenter.getNewAlarm();
+        showAlarmSetting(alarmSettingInfo);
     }
 
     private void showAlarmSetting(AlarmSettingInfo alarmSettingInfo) {

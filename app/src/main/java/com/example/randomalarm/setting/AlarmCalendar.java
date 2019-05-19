@@ -180,7 +180,7 @@ public class AlarmCalendar implements Parcelable, Comparable <AlarmCalendar> {
 
         @Override
         public String convertToDatabaseValue(ArrayList <AlarmCalendar> entityProperty) {
-            return JsonConverter.convertToDatabaseValue(entityProperty);
+            return JsonConverter.convertToStringValue(entityProperty);
         }
     }
 }

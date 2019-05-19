@@ -71,7 +71,7 @@ public class SongPickerActivity extends AppCompatActivity {
             case android.R.id.home:
                 this.finish();
                 return true;
-            case R.id.action_select:
+            case R.id.action_select_all:
                 adapter.selectAll(rvSongFile);
                 break;
             case R.id.action_save:

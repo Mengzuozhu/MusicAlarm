@@ -15,7 +15,10 @@
         android:roundIcon="@mipmap/app_alarm"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ImagePickerActivity"></activity>
+        <activity
+            android:name=".AppSettingActivity"
+            android:label="@string/title_app_setting" />
+        <activity android:name=".RemindImagePickerActivity" />
         <activity
             android:name=".multiCalendar.MultCalendarActivity"
             android:label="@string/title_activity_mult_calendar"

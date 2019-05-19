@@ -4,8 +4,10 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -19,6 +21,7 @@ import com.example.randomalarm.common.MediaPlayHelper;
 import com.example.randomalarm.common.VibrateHandler;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.example.randomalarm.setting.AppSetting;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -49,6 +52,8 @@ public class AlarmRemindActivity extends AppCompatActivity {
     ImageView ivSunClose;
     TimeTickReceiver timeTickReceiver;
     VibrateHandler vibrateHandler;
+    @BindView(R.id.layout_remind)
+    ConstraintLayout layoutRemind;
     private ExplosionField mExplosionField;
     private MediaPlayHelper mediaPlayHelper;
     private Timer timer;
@@ -87,6 +92,18 @@ public class AlarmRemindActivity extends AppCompatActivity {
         vibrateHandler = new VibrateHandler(this);
         alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(alarmId);
         playMedia();
+        setBackgroundImage();
+    }
+
+    private void setBackgroundImage() {
+        AppSetting setting = AppSetting.getSetting(this);
+        String remindImagePath = setting.getRemindImagePath();
+        File file = new File(remindImagePath);
+        if (!file.exists()) {
+            return;
+        }
+        Drawable drawable = Drawable.createFromPath(remindImagePath);
+        layoutRemind.setBackground(drawable);
     }
 
     @Subscribe
