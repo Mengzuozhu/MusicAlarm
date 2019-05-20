@@ -1,4 +1,4 @@
-package com.example.randomalarm;
+package com.example.randomalarm.setting;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.randomalarm.R;
 import com.example.randomalarm.alarm.AlarmConstant;
 import com.example.randomalarm.alarm.TimeTickReceiver;
 import com.example.randomalarm.common.DateHelper;
@@ -58,19 +60,6 @@ public class RemindFragment extends Fragment {
     private AlarmHandler alarmOnLister;
     private ExplosionField explosionField;
 
-    public static RemindFragment newInstance(String ringTitle, String remindImagePath) {
-        RemindFragment fragment = new RemindFragment();
-        Bundle args = new Bundle();
-        args.putString(AlarmConstant.RING_TITLE, ringTitle);
-        args.putString(AlarmConstant.REMIND_IMAGE_PATH, remindImagePath);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public void setAlarmOnLister(AlarmHandler alarmOnLister) {
-        this.alarmOnLister = alarmOnLister;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -94,6 +83,26 @@ public class RemindFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onDestroy() {
+        EventBusHelper.unregister(this);
+        activity.unregisterReceiver(timeTickReceiver);
+        super.onDestroy();
+    }
+
+    public static RemindFragment newInstance(String ringTitle, String remindImagePath) {
+        RemindFragment fragment = new RemindFragment();
+        Bundle args = new Bundle();
+        args.putString(AlarmConstant.RING_TITLE, ringTitle);
+        args.putString(AlarmConstant.REMIND_IMAGE_PATH, remindImagePath);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public void setAlarmOnLister(AlarmHandler alarmOnLister) {
+        this.alarmOnLister = alarmOnLister;
+    }
+
     private void setBackgroundImage(String remindImagePath) {
         File file = new File(remindImagePath);
         if (file.exists()) {
@@ -112,13 +121,6 @@ public class RemindFragment extends Fragment {
 
     public void showRealTime(Calendar calendar) {
         tvRealTime.setText(DateHelper.formatHHmm(calendar.getTime()));
-    }
-
-    @Override
-    public void onDestroy() {
-        EventBusHelper.unregister(this);
-        activity.unregisterReceiver(timeTickReceiver);
-        super.onDestroy();
     }
 
     @OnClick({R.id.iv_sun_close, R.id.tv_close})

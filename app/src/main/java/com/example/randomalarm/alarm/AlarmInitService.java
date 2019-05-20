@@ -25,10 +25,4 @@ public class AlarmInitService extends Service {
         }).start();
         return super.onStartCommand(intent, flags, startId);
     }
-
-    private void showAlarm() {
-        Intent intent = new Intent(this, AlarmRemindActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        this.startActivity(intent);
-    }
 }

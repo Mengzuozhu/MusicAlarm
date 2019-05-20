@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.randomalarm.adapter.MainAdapter;
+import com.example.randomalarm.alarm.SurpriseAlarm;
 import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.contract.MainContract;
 import com.example.randomalarm.edit.AlarmEditActivity;
@@ -22,7 +23,6 @@ import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 import com.example.randomalarm.setting.AppSettingActivity;
 import com.example.randomalarm.setting.DefaultSettingActivity;
-import com.example.randomalarm.alarm.SurpriseAlarm;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -88,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
             case R.id.action_app_setting:
                 Intent intent1 = getNewIntent(AppSettingActivity.class);
                 startActivity(intent1);
+                break;
+            default:
                 break;
         }
         return super.onOptionsItemSelected(item);

@@ -4,14 +4,14 @@
     tools:context="com.example.secondapplication.MainActivity">
 
     <item
-        android:id="@+id/action_default_setting"
-        android:orderInCategory="50"
-        android:title="@string/title_activity_default_setting"
+        android:id="@+id/action_app_setting"
+        android:orderInCategory="40"
+        android:title="@string/title_app_setting"
         app:showAsAction="never" />
 
     <item
-        android:id="@+id/action_app_setting"
-        android:orderInCategory="100"
-        android:title="@string/title_app_setting"
+        android:id="@+id/action_default_setting"
+        android:orderInCategory="50"
+        android:title="@string/title_activity_default_setting"
         app:showAsAction="never" />
 </menu>

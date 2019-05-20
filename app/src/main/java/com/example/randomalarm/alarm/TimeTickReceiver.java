@@ -7,6 +7,8 @@ import android.util.Log;
 
 import com.example.randomalarm.common.EventBusHelper;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.Calendar;
 
 /**
@@ -20,8 +22,7 @@ public class TimeTickReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String action = intent.getAction();
         if (Intent.ACTION_TIME_TICK.equals(action)) {
-            EventBusHelper.postEvent(Calendar.getInstance());
-            Log.i("分钟接收器", action);
+            EventBus.getDefault().post(Calendar.getInstance());
         }
     }
 }

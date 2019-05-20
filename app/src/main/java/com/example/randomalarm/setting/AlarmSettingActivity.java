@@ -19,6 +19,8 @@ import com.example.randomalarm.multiCalendar.MultCalendarActivity;
 import com.example.randomalarm.presenter.AlarmSettingPresenter;
 import com.example.randomalarm.song.AlarmSongActivity;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -79,7 +81,7 @@ public class AlarmSettingActivity extends AppCompatActivity implements AlarmSett
      */
     @Override
     public void save(AlarmSettingInfo alarmSettingInfo) {
-        EventBusHelper.postEvent(alarmSettingInfo);
+        EventBus.getDefault().post(alarmSettingInfo);
     }
 
     @Override

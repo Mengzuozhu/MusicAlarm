@@ -5,8 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
-import com.example.randomalarm.BasePresenter;
-import com.example.randomalarm.BaseView;
+import com.example.randomalarm.base.BasePresenter;
+import com.example.randomalarm.base.BaseView;
 import com.example.randomalarm.setting.AlarmCalendar;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 

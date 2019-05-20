@@ -2,8 +2,8 @@ package com.example.randomalarm.contract;
 
 import android.content.Context;
 
-import com.example.randomalarm.BasePresenter;
-import com.example.randomalarm.BaseView;
+import com.example.randomalarm.base.BasePresenter;
+import com.example.randomalarm.base.BaseView;
 import com.example.randomalarm.setting.AlarmSettingInfo;
 
 import java.util.List;

@@ -337,7 +337,11 @@ public class AlarmSettingInfo implements Parcelable {
     }
 
     public ArrayList <AlarmCalendar> getAlarmCalendars() {
-        return this.alarmCalendars;
+        ArrayList <AlarmCalendar> calendars = this.alarmCalendars;
+        if (calendars == null) {
+            return new ArrayList <>();
+        }
+        return calendars;
     }
 
     public void setAlarmCalendars(ArrayList <AlarmCalendar> alarmCalendars) {

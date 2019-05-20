@@ -12,6 +12,10 @@ public class EventBusHelper {
 
     private static EventBus eventBus = EventBus.getDefault();
 
+    private EventBusHelper() {
+        throw new IllegalStateException("Utility class");
+    }
+
     /**
      * 订阅事件
      *
@@ -68,7 +72,7 @@ public class EventBusHelper {
      *
      * @param event
      */
-    public static void postEvent(Object event) {
+    public static void post(Object event) {
         eventBus.post(event);
     }
 

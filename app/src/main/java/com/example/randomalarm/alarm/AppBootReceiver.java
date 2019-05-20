@@ -16,7 +16,6 @@ public class AppBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            ViewerHelper.showToast(context,"重启");
             Intent service = new Intent(context, AlarmInitService.class);
             context.startService(service);
         }

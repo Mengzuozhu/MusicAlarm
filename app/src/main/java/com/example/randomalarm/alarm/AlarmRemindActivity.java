@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 
 import com.example.randomalarm.R;
-import com.example.randomalarm.RemindFragment;
+import com.example.randomalarm.setting.RemindFragment;
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.MediaPlayHelper;
 import com.example.randomalarm.common.VibrateHandler;

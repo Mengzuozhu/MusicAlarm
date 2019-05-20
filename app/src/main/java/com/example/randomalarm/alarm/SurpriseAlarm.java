@@ -13,8 +13,8 @@ import com.example.randomalarm.common.MediaPlayHelper;
  */
 public class SurpriseAlarm {
 
-    private final static int HOUR = 14;
-    private final static int MINUTE = 25;
+    private static final int HOUR = 19;
+    private static final int MINUTE = 45;
     private AlertDialog alertDialog;
     private Context context;
     private MediaPlayHelper mediaPlayHelper;
@@ -27,16 +27,12 @@ public class SurpriseAlarm {
         if (hour != HOUR || minute != MINUTE) {
             return;
         }
-        mediaPlayHelper = new MediaPlayHelper(context, R.raw.sea);
+        mediaPlayHelper = new MediaPlayHelper(context, R.raw.only);
         //播放完成后，自动关闭
-        mediaPlayHelper.setOnCompletionListener(mp -> {
-            close();
-        });
+        mediaPlayHelper.setOnCompletionListener(mp -> close());
         mediaPlayHelper.start();
-        alertDialog = new AlertDialog.Builder(context).setTitle("彩蛋！").setMessage("老人与海")
-                .setNegativeButton("关闭", (dialog, which) -> {
-                    close();
-                }).create();
+        alertDialog = new AlertDialog.Builder(context).setTitle("又是彩蛋！").setMessage("我只在乎你")
+                .setNegativeButton("关闭", (dialog, which) -> close()).create();
         alertDialog.show();
     }
 

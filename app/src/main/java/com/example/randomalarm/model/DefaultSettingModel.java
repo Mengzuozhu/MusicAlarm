@@ -34,7 +34,7 @@ public class DefaultSettingModel {
     public AlarmSettingInfo loadDefaultAlarmSetting() {
         List <AlarmSettingInfo> data = daoSession.loadAll(AlarmSettingInfo.class);
         AlarmSettingInfo defaultSetting;
-        if (data != null && data.size() > 0) {
+        if (data != null && !data.isEmpty()) {
             defaultSetting = data.get(0);
         } else {
             defaultSetting = new AlarmSettingInfo();

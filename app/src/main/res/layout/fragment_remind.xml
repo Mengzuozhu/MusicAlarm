@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/layout_remind1"
-    tools:context=".RemindFragment">
+    tools:context=".setting.RemindFragment">
 
     <ImageView
         android:id="@+id/iv_moon_remind"
