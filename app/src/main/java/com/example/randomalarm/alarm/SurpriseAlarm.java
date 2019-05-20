@@ -1,4 +1,4 @@
-package com.example.randomalarm.setting;
+package com.example.randomalarm.alarm;
 
 import android.app.AlertDialog;
 import android.content.Context;

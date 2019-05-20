@@ -1,4 +1,4 @@
-package com.example.randomalarm;
+package com.example.randomalarm.setting;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -9,9 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
+import com.example.randomalarm.R;
 import com.example.randomalarm.common.MatisseHelper;
 import com.example.randomalarm.common.ViewerHelper;
-import com.example.randomalarm.setting.AppSetting;
 import com.zhihu.matisse.Matisse;
 
 import java.io.File;
@@ -22,9 +22,9 @@ import butterknife.ButterKnife;
 
 public class RemindImagePickerActivity extends AppCompatActivity {
 
-    AppSetting appSetting;
     @BindView(R.id.imageView)
     ImageView imageView;
+    AppSetting appSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +62,8 @@ public class RemindImagePickerActivity extends AppCompatActivity {
                 appSetting.setRemindImagePath("");
                 showImage();
                 return true;
+            default:
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -75,7 +77,7 @@ public class RemindImagePickerActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == MatisseHelper.REQUEST_CODE_CHOOSE && resultCode == RESULT_OK) {
             List <String> result = Matisse.obtainPathResult(data);
-            if (result != null && result.size() > 0) {
+            if (result != null && !result.isEmpty()) {
                 appSetting.setRemindImagePath(result.get(0));
                 Log.w("image", appSetting.getRemindImagePath());
                 showImage();

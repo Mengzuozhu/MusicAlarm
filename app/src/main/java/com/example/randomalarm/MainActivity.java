@@ -20,8 +20,9 @@ import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.presenter.MainPresenter;
 import com.example.randomalarm.setting.AlarmSettingActivity;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.example.randomalarm.setting.AppSettingActivity;
 import com.example.randomalarm.setting.DefaultSettingActivity;
-import com.example.randomalarm.setting.SurpriseAlarm;
+import com.example.randomalarm.alarm.SurpriseAlarm;
 
 import org.greenrobot.eventbus.Subscribe;
 

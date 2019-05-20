@@ -4,57 +4,27 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.example.randomalarm.R;
+import com.example.randomalarm.RemindFragment;
 import com.example.randomalarm.common.DateHelper;
-import com.example.randomalarm.common.EventBusHelper;
 import com.example.randomalarm.common.MediaPlayHelper;
 import com.example.randomalarm.common.VibrateHandler;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
-import com.example.randomalarm.setting.AppSetting;
-
-import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import tyrantgit.explosionfield.ExplosionField;
 
 public class AlarmRemindActivity extends AppCompatActivity {
 
     private static final int CLOSE_DELAY = 500;
-    @BindView(R.id.tv_remind)
-    TextView tvRemind;
-    @BindView(R.id.tv_close)
-    TextView tvClose;
-    @BindView(R.id.tv_real_time)
-    TextView tvRealTime;
-    @BindView(R.id.tv_alarm_song)
-    TextView tvAlarmSong;
-    @BindView(R.id.iv_moon_remind)
-    ImageView ivMoonRemind;
-    @BindView(R.id.iv_sun_close)
-    ImageView ivSunClose;
-    TimeTickReceiver timeTickReceiver;
-    VibrateHandler vibrateHandler;
-    @BindView(R.id.layout_remind)
-    ConstraintLayout layoutRemind;
-    private ExplosionField mExplosionField;
+    private VibrateHandler vibrateHandler;
     private MediaPlayHelper mediaPlayHelper;
     private Timer timer;
     private AlarmSettingInfo alarmSettingInfo;
@@ -75,15 +45,8 @@ public class AlarmRemindActivity extends AppCompatActivity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.activity_alarm_remind);
-        ButterKnife.bind(this);
-        EventBusHelper.register(this);
 
-        timeTickReceiver = new TimeTickReceiver();
-        registerReceiver(timeTickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         registerReceiver(screenLockReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        showRealTime(Calendar.getInstance());
-
-        mExplosionField = ExplosionField.attach2Window(this);
         Intent intent = getIntent();
         long alarmId = intent.getLongExtra(AlarmConstant.ALARM_ID, -1);
         if (alarmId == -1) {
@@ -91,31 +54,28 @@ public class AlarmRemindActivity extends AppCompatActivity {
         }
         vibrateHandler = new VibrateHandler(this);
         alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(alarmId);
-        playMedia();
-        setBackgroundImage();
+        String ringTitle = playMedia();
+        showFragment(ringTitle);
     }
 
-    private void setBackgroundImage() {
-        AppSetting setting = AppSetting.getSetting(this);
-        String remindImagePath = setting.getRemindImagePath();
-        File file = new File(remindImagePath);
-        if (!file.exists()) {
-            return;
-        }
-        Drawable drawable = Drawable.createFromPath(remindImagePath);
-        layoutRemind.setBackground(drawable);
+    public void showFragment(String ringTitle) {
+        RemindFragment remindFragment = RemindFragment.newInstance(ringTitle);
+        remindFragment.setAlarmOnLister(new RemindFragment.AlarmHandler() {
+            @Override
+            public void setNextIntervalAlarm() {
+                AlarmRemindActivity.this.setNextIntervalAlarm();
+            }
+
+            @Override
+            public void setFirstAlarm() {
+                new AlarmMangerClass(AlarmRemindActivity.this).setFirstAlarm(alarmSettingInfo, false);
+                finishInTime(CLOSE_DELAY);
+            }
+        });
+        getSupportFragmentManager().beginTransaction().replace(R.id.layout_remind, remindFragment).commit();
     }
 
-    @Subscribe
-    public void getRealTimeEvent(Calendar calendar) {
-        showRealTime(calendar);
-    }
-
-    public void showRealTime(Calendar calendar) {
-        tvRealTime.setText(DateHelper.formatHHmm(calendar.getTime()));
-    }
-
-    public void playMedia() {
+    public String playMedia() {
         String playedSongPath = alarmSettingInfo.getPlayedSongPath();
         String ringTitle = "铃声：";
         File file = new File(playedSongPath);
@@ -127,13 +87,13 @@ public class AlarmRemindActivity extends AppCompatActivity {
             mediaPlayHelper = new MediaPlayHelper(this, R.raw.dawn);
             ringTitle += "默认";
         }
-        tvAlarmSong.setText(ringTitle);
         //重复播放
         mediaPlayHelper.setLoopPlay();
         mediaPlayHelper.start();
         vibrateOrNot();
         int duration = alarmSettingInfo.getDuration() * DateHelper.MINUTE_TO_MILLIS;
-        closeInTime(duration);
+        finishInTime(duration);
+        return ringTitle;
     }
 
     public void vibrateOrNot() {
@@ -148,22 +108,14 @@ public class AlarmRemindActivity extends AppCompatActivity {
      */
     public void setNextIntervalAlarm() {
         new AlarmMangerClass(AlarmRemindActivity.this).setNextIntervalAlarm(alarmSettingInfo);
-        closeInTime(CLOSE_DELAY);
-    }
-
-    /**
-     * 设置下一天的闹钟
-     */
-    public void setNextDayFirstAlarm() {
-        new AlarmMangerClass(AlarmRemindActivity.this).setFirstAlarm(alarmSettingInfo, false);
-        closeInTime(CLOSE_DELAY);
+        finishInTime(CLOSE_DELAY);
     }
 
     public void thisFinish() {
         this.finish();
     }
 
-    public void closeInTime(int delayMillis) {
+    public void finishInTime(int delayMillis) {
         timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -185,28 +137,8 @@ public class AlarmRemindActivity extends AppCompatActivity {
         if (vibrateHandler != null) {
             vibrateHandler.cancel();
         }
-        EventBusHelper.unregister(this);
-        unregisterReceiver(timeTickReceiver);
         unregisterReceiver(screenLockReceiver);
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_sun_close, R.id.tv_close})
-    public void close_onClick(View view) {
-        explode(ivSunClose);
-        explode(tvClose);
-        setNextDayFirstAlarm();
-    }
-
-    @OnClick({R.id.iv_moon_remind, R.id.tv_remind})
-    public void remind_onClick(View view) {
-        explode(ivMoonRemind);
-        explode(tvRemind);
-        setNextIntervalAlarm();
-    }
-
-    public void explode(View view) {
-        mExplosionField.explode(view);
-        view.setOnClickListener(null);
-    }
 }

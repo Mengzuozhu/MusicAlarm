@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/layout_remind1"
+    tools:context=".RemindFragment">
+
+    <ImageView
+        android:id="@+id/iv_moon_remind"
+        android:layout_width="@dimen/image_view_size"
+        android:layout_height="@dimen/image_view_size"
+        android:contentDescription="remind latter"
+        android:src="@mipmap/moon"
+        app:layout_constraintBottom_toBottomOf="@+id/divider_middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_remind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/remind_latter"
+        android:textSize="@dimen/font_25"
+        app:layout_constraintEnd_toEndOf="@+id/iv_moon_remind"
+        app:layout_constraintStart_toStartOf="@+id/iv_moon_remind"
+        app:layout_constraintTop_toBottomOf="@+id/iv_moon_remind" />
+
+    <com.github.glomadrian.grav.GravView
+        android:id="@+id/grav_moon"
+        android:layout_width="@dimen/grav_view_size"
+        android:layout_height="@dimen/grav_view_size"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:foregroundGravity="center|bottom"
+        app:animationGenerators="@array/path"
+        app:array_colors="@array/black"
+        app:ball_size_from_size="3dp"
+        app:ball_size_to_size="6dp"
+        app:colorGenerator="com.github.glomadrian.grav.generator.paint.ArrayColorGenerator"
+        app:gravGenerator="com.github.glomadrian.grav.generator.grav.BallGenerator"
+        app:layout_constraintBottom_toBottomOf="@+id/divider_middle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/grav_all"
+        app:path="@string/circle"
+        app:path_max_duration="6000"
+        app:path_min_duration="5000"
+        app:path_original_height="@integer/circle_original_height"
+        app:path_original_width="@integer/circle_original_width"
+        app:path_variance_from="-10dp"
+        app:path_variance_to="12dp"
+        app:pointGenerator="com.github.glomadrian.grav.generator.point.RegularPointGenerator"
+        app:regular_cell_size="150"
+        app:regular_variance="200" />
+
+    <View
+        android:id="@+id/divider_middle"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/colorBlue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/iv_sun_close"
+        android:layout_width="@dimen/image_view_size"
+        android:layout_height="@dimen/image_view_size"
+        android:contentDescription="close"
+        android:src="@mipmap/sun"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_middle" />
+
+    <TextView
+        android:id="@+id/tv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/close_alarm"
+        android:textColor="@color/colorGold"
+        android:textSize="@dimen/font_25"
+        app:layout_constraintBottom_toTopOf="@+id/iv_sun_close"
+        app:layout_constraintEnd_toEndOf="@+id/iv_sun_close"
+        app:layout_constraintHorizontal_bias="0.6"
+        app:layout_constraintStart_toStartOf="@+id/iv_sun_close" />
+
+    <com.github.glomadrian.grav.GravView
+        android:id="@+id/grav_sun"
+        android:layout_width="@dimen/grav_view_size"
+        android:layout_height="@dimen/grav_view_size"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:foregroundGravity="center|bottom"
+        app:animationGenerators="@array/path"
+        app:array_colors="@array/gold"
+        app:ball_size_from_size="3dp"
+        app:ball_size_to_size="6dp"
+        app:colorGenerator="com.github.glomadrian.grav.generator.paint.ArrayColorGenerator"
+        app:gravGenerator="com.github.glomadrian.grav.generator.grav.BallGenerator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_middle"
+        app:path="@string/circle"
+        app:path_max_duration="6000"
+        app:path_min_duration="5000"
+        app:path_original_height="@integer/circle_original_height"
+        app:path_original_width="@integer/circle_original_width"
+        app:path_variance_from="-10dp"
+        app:path_variance_to="12dp"
+        app:pointGenerator="com.github.glomadrian.grav.generator.point.RegularPointGenerator"
+        app:regular_cell_size="150"
+        app:regular_variance="200" />
+
+    <com.github.glomadrian.grav.GravView
+        android:id="@+id/grav_all"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        app:animationGenerators="@array/BallWaveAnimations"
+        app:array_colors="@array/Spectral"
+        app:ball_size="3dp"
+        app:ball_size_from_size="3dp"
+        app:ball_size_to_size="6dp"
+        app:colorGenerator="com.github.glomadrian.grav.generator.paint.ArrayColorGenerator"
+        app:gravGenerator="com.github.glomadrian.grav.generator.grav.BallGenerator"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        app:pointGenerator="com.github.glomadrian.grav.generator.point.RegularPointGenerator"
+        app:regular_cell_size="100"
+        app:regular_variance="200"
+        app:shake_direction="horizontal"
+        app:shake_variance="50dp"
+        app:side_to_side_direction="downToUp"
+        app:side_to_side_max_duration="5000"
+        app:side_to_side_min_duration="2000"
+        tools:layout_editor_absoluteX="-94dp" />
+
+    <TextView
+        android:id="@+id/tv_real_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/undefined"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/font_45"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_alarm_song"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/undefined"
+        android:textSize="@dimen/font_20"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</android.support.constraint.ConstraintLayout>

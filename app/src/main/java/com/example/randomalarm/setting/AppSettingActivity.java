@@ -1,4 +1,4 @@
-package com.example.randomalarm;
+package com.example.randomalarm.setting;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
-import android.widget.TextView;
 
+import com.example.randomalarm.R;
 import com.example.randomalarm.adapter.MultipleItem;
 import com.example.randomalarm.adapter.MultipleItemQuickAdapter;
 import com.example.randomalarm.common.ViewerHelper;
@@ -48,7 +48,6 @@ public class AppSettingActivity extends AppCompatActivity {
         List <MultipleItem> settings = getSettings();
         multipleItemAdapter = new MultipleItemQuickAdapter(settings);
         multipleItemAdapter.setOnItemClickListener((adapter1, view, position) -> {
-            TextView textView = view.findViewById(R.id.tv_setting_name);
             showSetting(position);
         });
         rvAppSetting.setLayoutManager(new LinearLayoutManager(this));

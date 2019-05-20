@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">音乐闹钟</string>
     <string name="appbar_scrolling_view_behavior" translatable="false">android.support.design.widget.AppBarLayout$ScrollingViewBehavior</string>
+    <string name="alarm_setting_db_name">T_ALARM_SETTING</string>
+    <string name="default_alarm_setting_db_name">T_DEFAULT_ALARM_SETTING</string>
     <string name="title_activity_alarm_setting">设置闹钟</string>
     <string name="title_activity_alarm_edit">编辑</string>
     <string name="title_activity_alarm_song">闹钟铃声</string>
@@ -8,10 +10,9 @@
     <string name="title_activity_default_setting">默认闹钟</string>
     <string name="title_activity_mult_calendar">闹钟日期</string>
     <string name="title_app_setting">配置</string>
+    <string name="title_remind_image">背景图片</string>
     <string name="repeat_name">重复</string>
     <string name="ring_name">铃声</string>
-    <string name="alarm_setting_db_name">T_ALARM_SETTING</string>
-    <string name="default_alarm_setting_db_name">T_DEFAULT_ALARM_SETTING</string>
     <string name="edit">编辑</string>
     <string name="complete">完成</string>
     <string name="ascend">升序</string>
@@ -25,7 +26,6 @@
     <string name="play_mode_order">顺序播放</string>
     <string name="delete_all">全删</string>
     <string name="title_search">搜索</string>
-
     <string name="circle">
 M527.023,71.8233 C780.213,71.8233,985.464,277.075,985.464,530.265
 C985.464,783.455,780.213,988.707,527.023,988.707
@@ -37,4 +37,7 @@ C68.5809,277.075,273.832,71.8233,527.023,71.8233 Z
     <string name="clear">清空</string>
     <integer name="circle_original_width">1062</integer>
     <integer name="circle_original_height">1062</integer>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
