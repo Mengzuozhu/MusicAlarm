@@ -12,14 +12,14 @@ import com.example.randomalarm.common.JsonConverter;
  */
 public class AppSetting {
 
-    private final static String APP_SETTING = "AppSetting";
+    private static final String APP_SETTING = "AppSetting";
     private String remindImagePath;
 
-    public AppSetting(String remindImagePath) {
+    private AppSetting(String remindImagePath) {
         this.remindImagePath = remindImagePath;
     }
 
-    public static AppSetting getSetting(Context context) {
+    public static AppSetting readSetting(Context context) {
         SharedPreferences sharedPreferences = getSharedPreferences(context);
         String jsonSetting = sharedPreferences.getString(APP_SETTING, "");
         AppSetting appSetting = JsonConverter.jsonToClass(jsonSetting, AppSetting.class);
@@ -33,7 +33,7 @@ public class AppSetting {
         return context.getSharedPreferences(APP_SETTING, Context.MODE_PRIVATE);
     }
 
-    public void writeSetting(Context context) {
+    void applySetting(Context context) {
         SharedPreferences sharedPreferences = getSharedPreferences(context);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         String stringValue = JsonConverter.convertToStringValue(this);
@@ -45,7 +45,7 @@ public class AppSetting {
         return remindImagePath;
     }
 
-    public void setRemindImagePath(String remindImagePath) {
+    void setRemindImagePath(String remindImagePath) {
         this.remindImagePath = remindImagePath;
     }
 }

@@ -18,7 +18,6 @@ import com.example.randomalarm.alarm.AlarmConstant;
 import com.example.randomalarm.alarm.TimeTickReceiver;
 import com.example.randomalarm.common.DateHelper;
 import com.example.randomalarm.common.EventBusHelper;
-import com.example.randomalarm.setting.AppSetting;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -54,15 +53,16 @@ public class RemindFragment extends Fragment {
     TimeTickReceiver timeTickReceiver;
     @BindView(R.id.layout_remind1)
     ConstraintLayout layoutRemind;
-    Context context;
-    FragmentActivity activity;
-    AlarmHandler alarmOnLister;
+    private Context context;
+    private FragmentActivity activity;
+    private AlarmHandler alarmOnLister;
     private ExplosionField explosionField;
 
-    public static RemindFragment newInstance(String ringTitle) {
+    public static RemindFragment newInstance(String ringTitle, String remindImagePath) {
         RemindFragment fragment = new RemindFragment();
         Bundle args = new Bundle();
         args.putString(AlarmConstant.RING_TITLE, ringTitle);
+        args.putString(AlarmConstant.REMIND_IMAGE_PATH, remindImagePath);
         fragment.setArguments(args);
         return fragment;
     }
@@ -83,24 +83,26 @@ public class RemindFragment extends Fragment {
         activity.registerReceiver(timeTickReceiver, new IntentFilter(Intent.ACTION_TIME_TICK));
         explosionField = ExplosionField.attach2Window(activity);
         Bundle bundle = getArguments();
+        String remindImagePath = "";
         if (bundle != null) {
             String ringTitle = bundle.getString(AlarmConstant.RING_TITLE);
+            remindImagePath = bundle.getString(AlarmConstant.REMIND_IMAGE_PATH);
             tvAlarmSong.setText(ringTitle);
         }
         showRealTime(Calendar.getInstance());
-        setBackgroundImage();
+        setBackgroundImage(remindImagePath);
         return view;
     }
 
-    private void setBackgroundImage() {
-        AppSetting setting = AppSetting.getSetting(context);
-        String remindImagePath = setting.getRemindImagePath();
+    private void setBackgroundImage(String remindImagePath) {
         File file = new File(remindImagePath);
-        if (!file.exists()) {
-            return;
+        if (file.exists()) {
+            Drawable drawable = Drawable.createFromPath(remindImagePath);
+            layoutRemind.setBackground(drawable);
+        } else {
+            layoutRemind.setBackground(null);
+            layoutRemind.setBackgroundColor(context.getColor(R.color.colorBlue));
         }
-        Drawable drawable = Drawable.createFromPath(remindImagePath);
-        layoutRemind.setBackground(drawable);
     }
 
     @Subscribe
@@ -120,7 +122,7 @@ public class RemindFragment extends Fragment {
     }
 
     @OnClick({R.id.iv_sun_close, R.id.tv_close})
-    public void close_onClick(View view) {
+    public void closeOnClick() {
         explode(ivSunClose);
         explode(tvClose);
         if (alarmOnLister != null) {
@@ -129,7 +131,7 @@ public class RemindFragment extends Fragment {
     }
 
     @OnClick({R.id.iv_moon_remind, R.id.tv_remind})
-    public void remind_onClick(View view) {
+    public void remindOnClick() {
         explode(ivMoonRemind);
         explode(tvRemind);
         if (alarmOnLister != null) {

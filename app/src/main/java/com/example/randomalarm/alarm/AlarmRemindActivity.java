@@ -16,6 +16,7 @@ import com.example.randomalarm.common.MediaPlayHelper;
 import com.example.randomalarm.common.VibrateHandler;
 import com.example.randomalarm.model.AlarmSettingModel;
 import com.example.randomalarm.setting.AlarmSettingInfo;
+import com.example.randomalarm.setting.AppSetting;
 
 import java.io.File;
 import java.util.Timer;
@@ -24,9 +25,10 @@ import java.util.TimerTask;
 public class AlarmRemindActivity extends AppCompatActivity {
 
     private static final int CLOSE_DELAY = 500;
+    private static final long[] VIBRATE_PATTERN = {500, 400};
     private VibrateHandler vibrateHandler;
     private MediaPlayHelper mediaPlayHelper;
-    private Timer timer;
+    private Timer finishTimer;
     private AlarmSettingInfo alarmSettingInfo;
     private BroadcastReceiver screenLockReceiver = new BroadcastReceiver() {
         @Override
@@ -46,20 +48,23 @@ public class AlarmRemindActivity extends AppCompatActivity {
                 | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
         setContentView(R.layout.activity_alarm_remind);
 
-        registerReceiver(screenLockReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
-        Intent intent = getIntent();
-        long alarmId = intent.getLongExtra(AlarmConstant.ALARM_ID, -1);
+        long alarmId = getIntent().getLongExtra(AlarmConstant.ALARM_ID, -1);
         if (alarmId == -1) {
             return;
         }
-        vibrateHandler = new VibrateHandler(this);
         alarmSettingInfo = AlarmSettingModel.getAlarmSettingInfoById(alarmId);
+        if (alarmSettingInfo == null) {
+            return;
+        }
+        registerReceiver(screenLockReceiver, new IntentFilter(Intent.ACTION_SCREEN_OFF));
+        vibrateHandler = new VibrateHandler(this);
         String ringTitle = playMedia();
         showFragment(ringTitle);
     }
 
     public void showFragment(String ringTitle) {
-        RemindFragment remindFragment = RemindFragment.newInstance(ringTitle);
+        AppSetting setting = AppSetting.readSetting(this);
+        RemindFragment remindFragment = RemindFragment.newInstance(ringTitle, setting.getRemindImagePath());
         remindFragment.setAlarmOnLister(new RemindFragment.AlarmHandler() {
             @Override
             public void setNextIntervalAlarm() {
@@ -98,8 +103,7 @@ public class AlarmRemindActivity extends AppCompatActivity {
 
     public void vibrateOrNot() {
         if (alarmSettingInfo.getIsVibrated()) {
-            long[] vibratePattern = {500, 400};
-            vibrateHandler.vibrate(vibratePattern, 0);
+            vibrateHandler.vibrate(VIBRATE_PATTERN, 0);
         }
     }
 
@@ -116,8 +120,8 @@ public class AlarmRemindActivity extends AppCompatActivity {
     }
 
     public void finishInTime(int delayMillis) {
-        timer = new Timer();
-        timer.schedule(new TimerTask() {
+        finishTimer = new Timer();
+        finishTimer.schedule(new TimerTask() {
             @Override
             public void run() {
                 thisFinish();
@@ -130,9 +134,9 @@ public class AlarmRemindActivity extends AppCompatActivity {
         if (mediaPlayHelper != null) {
             mediaPlayHelper.release();
         }
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
+        if (finishTimer != null) {
+            finishTimer.cancel();
+            finishTimer = null;
         }
         if (vibrateHandler != null) {
             vibrateHandler.cancel();

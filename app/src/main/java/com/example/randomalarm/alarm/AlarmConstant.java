@@ -8,4 +8,5 @@ package com.example.randomalarm.alarm;
 public class AlarmConstant {
     public static final String ALARM_ID = "ALARM_ID";
     public static final String RING_TITLE = "RING_TITLE";
+    public static final String REMIND_IMAGE_PATH = "REMIND_IMAGE_PATH";
 }

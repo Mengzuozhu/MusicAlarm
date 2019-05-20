@@ -1,30 +1,25 @@
 package com.example.randomalarm.setting;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
 import com.example.randomalarm.R;
+import com.example.randomalarm.RemindFragment;
 import com.example.randomalarm.common.MatisseHelper;
 import com.example.randomalarm.common.ViewerHelper;
 import com.zhihu.matisse.Matisse;
 
-import java.io.File;
 import java.util.List;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class RemindImagePickerActivity extends AppCompatActivity {
 
-    @BindView(R.id.imageView)
-    ImageView imageView;
-    AppSetting appSetting;
+    private AppSetting appSetting;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +28,7 @@ public class RemindImagePickerActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         ViewerHelper.displayHomeAsUp(getSupportActionBar());
 
-        appSetting = AppSetting.getSetting(this);
+        appSetting = AppSetting.readSetting(this);
         showImage();
     }
 
@@ -55,11 +50,14 @@ public class RemindImagePickerActivity extends AppCompatActivity {
                 save();
                 this.finish();
                 return true;
-            case R.id.action_select:
+            case R.id.action_image_select:
                 MatisseHelper.showMatisse(this, MatisseHelper.REQUEST_CODE_CHOOSE);
                 return true;
-            case R.id.action_default:
+            case R.id.action_image_default:
                 appSetting.setRemindImagePath("");
+                showImage();
+                return true;
+            case R.id.action_image_refresh:
                 showImage();
                 return true;
             default:
@@ -69,7 +67,7 @@ public class RemindImagePickerActivity extends AppCompatActivity {
     }
 
     public void save() {
-        appSetting.writeSetting(this);
+        appSetting.applySetting(this);
     }
 
     @Override
@@ -87,12 +85,7 @@ public class RemindImagePickerActivity extends AppCompatActivity {
 
     private void showImage() {
         String remindImagePath = appSetting.getRemindImagePath();
-        File file = new File(remindImagePath);
-        if (file.exists()) {
-            imageView.setImageDrawable(Drawable.createFromPath(remindImagePath));
-        } else {
-            imageView.setImageDrawable(null);
-            imageView.setBackgroundColor(this.getColor(R.color.colorBlue));
-        }
+        RemindFragment remindFragment = RemindFragment.newInstance("铃声", remindImagePath);
+        getSupportFragmentManager().beginTransaction().replace(R.id.layout_remind_image, remindFragment).commit();
     }
 }

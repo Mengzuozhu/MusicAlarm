@@ -40,4 +40,7 @@ C68.5809,277.075,273.832,71.8233,527.023,71.8233 Z
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="image_refresh">刷新</string>
+    <string name="image_default">默认</string>
+    <string name="image_select">选择</string>
 </resources>
