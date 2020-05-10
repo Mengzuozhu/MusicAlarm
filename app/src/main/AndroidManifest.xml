@@ -65,8 +65,6 @@
         <activity android:name=".ui.GridEditActivity" />
 
         <receiver android:name=".alarm.TimeTickReceiver" />
-        <receiver android:name=".notify.AlarmNotification" />
-        <receiver android:name=".notify.NotificationReceiver" />
 
     </application>
 
