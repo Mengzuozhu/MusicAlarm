@@ -14,3 +14,5 @@
 .idea/sonarlint/
 app/release/
 gradle.properties
+.idea/
+gradle/
