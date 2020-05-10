@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.mengzz.musicalarm">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:name=".MyApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/app_alarm"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/app_alarm"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme"
+        tools:replace="label,allowBackup">
+        <activity
+            android:name=".ui.RemindImageActivity"
+            android:label="@string/title_remind_image" />
+        <activity
+            android:name=".ui.AppSettingActivity"
+            android:label="@string/title_app_setting" />
+        <activity
+            android:name=".ui.RemindImagePreviewActivity"
+            android:label="@string/title_remind_preview" />
+        <activity
+            android:name=".multicalendar.MultCalendarActivity"
+            android:label="@string/title_activity_mult_calendar"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".ui.DefaultSettingActivity"
+            android:label="@string/title_activity_default_setting" />
+        <activity
+            android:name=".ui.SongPickerActivity"
+            android:label="@string/title_activity_song_picker" />
+        <activity
+            android:name=".ui.LinearEditActivity"
+            android:label="@string/title_activity_alarm_edit" />
+        <activity
+            android:name=".ui.AlarmSongActivity"
+            android:label="@string/title_activity_alarm_song" />
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.AlarmSettingActivity"
+            android:label="@string/title_activity_alarm_setting" />
+        <!--设置excludeFromRecents，避免闹钟提醒界面关闭后，再出现在运行列表中-->
+        <activity
+            android:name=".ui.AlarmRemindActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleInstance"
+            android:theme="@style/AppTheme.FullscreenNoActionBar" />
+        <activity android:name=".ui.GridEditActivity" />
+
+        <receiver android:name=".alarm.TimeTickReceiver" />
+        <receiver android:name=".notify.AlarmNotification" />
+        <receiver android:name=".notify.NotificationReceiver" />
+
+    </application>
+
+</manifest>

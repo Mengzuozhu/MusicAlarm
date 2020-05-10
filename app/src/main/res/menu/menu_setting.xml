@@ -1,0 +1,17 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.mengzz.secondapplication.MainActivity">
+
+    <item
+        android:id="@+id/action_app_setting"
+        android:orderInCategory="40"
+        android:title="@string/title_app_setting"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_default_setting"
+        android:orderInCategory="50"
+        android:title="@string/title_activity_default_setting"
+        app:showAsAction="never" />
+</menu>

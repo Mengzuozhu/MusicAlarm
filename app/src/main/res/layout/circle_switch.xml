@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Switch xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swh_status"
+    style="@style/StyleListRightItem"
+    android:layout_width="wrap_content"
+    android:focusable="false"
+    android:textOff=""
+    android:textOn=""
+    android:thumb="@drawable/switch_thump"
+    android:track="@drawable/switch_track"
+    tools:showIn="@layout/item_alarm" />
+

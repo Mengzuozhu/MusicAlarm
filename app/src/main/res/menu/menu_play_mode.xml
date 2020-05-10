@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_play_mode"
+        android:orderInCategory="1"
+        android:title="@string/play_mode"
+        app:showAsAction="never">
+        <menu>
+            <group
+                android:id="@+id/play_mode_group"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/mode_random"
+                    android:title="@string/play_mode_random"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/mode_single"
+                    android:title="@string/play_mode_single"
+                    app:showAsAction="never" />
+                <item
+                    android:id="@+id/mode_order"
+                    android:title="@string/play_mode_order"
+                    app:showAsAction="never" />
+            </group>
+        </menu>
+    </item>
+    >
+
+</menu>

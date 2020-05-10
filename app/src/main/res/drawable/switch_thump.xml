@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <size
+        android:width="@dimen/switch_track_height_25"
+        android:height="@dimen/switch_track_height_25" />
+    <corners android:radius="@dimen/switch_track_height_25" />
+
+    <gradient
+        android:endColor="@color/colorWhite"
+        android:startColor="@color/colorWhite" />
+
+</shape>

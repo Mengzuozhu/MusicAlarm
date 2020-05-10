@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.AlarmSongActivity">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/content_alarm_song" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_song_scroll_first"
+        style="@style/StyleFab"
+        android:layout_marginBottom="@dimen/fab_margin_20"
+        android:src="@mipmap/go_top"
+        app:backgroundTint="@color/colorGray"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toTopOf="@+id/fab_song_add"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_song_add"
+        style="@style/StyleFab"
+        android:src="@mipmap/add"
+        app:backgroundTint="@color/colorGray"
+        app:fabSize="mini"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

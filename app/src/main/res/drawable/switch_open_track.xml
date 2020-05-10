@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <size android:height="@dimen/switch_track_height_25"/>
+    <corners android:radius="@dimen/rounded_corner_radius_15"/>
+    <!-- 变化率 -->
+    <gradient
+        android:endColor="@color/colorGreen"
+        android:startColor="@color/colorGreen" />
+</shape>
