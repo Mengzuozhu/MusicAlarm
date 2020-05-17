@@ -52,7 +52,9 @@ public class AlarmMangerClass {
      * @param isShowRemind     是否提示响铃时间
      */
     public void setFirstAlarm(AlarmSettingInfo alarmSettingInfo, boolean isShowRemind) {
-        if (isAlarmClosed(alarmSettingInfo)) return;
+        if (isAlarmClosed(alarmSettingInfo)) {
+            return;
+        }
 
         int hour = alarmSettingInfo.getHour();
         int minute = alarmSettingInfo.getMinute();
@@ -74,7 +76,9 @@ public class AlarmMangerClass {
      * @param alarmSettingInfo the alarm setting info
      */
     public void setNextIntervalAlarm(AlarmSettingInfo alarmSettingInfo) {
-        if (isAlarmClosed(alarmSettingInfo)) return;
+        if (isAlarmClosed(alarmSettingInfo)) {
+            return;
+        }
 
         Calendar calendar = alarmSettingInfo.getNextIntervalAlarm();
         if (calendar == null) {

@@ -105,7 +105,7 @@ public class AlarmSettingInfo implements Parcelable {
         this.duration = in.readInt();
         this.isVibrated = in.readByte() != 0;
         this.remark = in.readString();
-        this.alarmRepeatMode = new ArrayList <AlarmRepeatMode>();
+        this.alarmRepeatMode = new ArrayList<>();
         in.readList(this.alarmRepeatMode, AlarmRepeatMode.class.getClassLoader());
         this.songInfos = in.createTypedArrayList(SongInfo.CREATOR);
         int tmpPlayedMode = in.readInt();
@@ -122,7 +122,7 @@ public class AlarmSettingInfo implements Parcelable {
     public Calendar getNextAlarmDate(Calendar nextCalendar) {
         alarmCalendars = AlarmCalendar.removeInvalidDate(alarmCalendars);
         //首选闹钟日期
-        if (alarmCalendars != null && !alarmCalendars.isEmpty()) {
+        if (!alarmCalendars.isEmpty()) {
             return getNextAlarmDateByCalendar(nextCalendar);
         }
         return getNextAlarmDateByRepeatMode(nextCalendar);
@@ -173,7 +173,9 @@ public class AlarmSettingInfo implements Parcelable {
      */
     public Calendar getNextIntervalAlarm() {
         currentRepeatNum = 0;
-        if (AlarmRepeatMode.isNowNotInRepeatModeDay(alarmRepeatMode)) return null;
+        if (AlarmRepeatMode.isNowNotInRepeatModeDay(alarmRepeatMode)) {
+            return null;
+        }
 
         Calendar calendar = DateHelper.getCalendarByHourAndMinute(hour, minute);
         Calendar nowTime = DateHelper.getNowTime();
@@ -213,6 +215,7 @@ public class AlarmSettingInfo implements Parcelable {
             case SINGLE:
                 break;
             case ORDER:
+            default:
                 index = currentRepeatNum % size;
                 break;
         }
@@ -302,8 +305,8 @@ public class AlarmSettingInfo implements Parcelable {
         return this.repeatFrequency;
     }
 
-    public void setRepeatFrequency(int RepeatNumber) {
-        this.repeatFrequency = RepeatNumber;
+    public void setRepeatFrequency(int repeatNumber) {
+        this.repeatFrequency = repeatNumber;
     }
 
     public int getDuration() {
@@ -348,8 +351,7 @@ public class AlarmSettingInfo implements Parcelable {
     }
 
     public ArrayList <AlarmCalendar> getAlarmCalendars() {
-        ArrayList <AlarmCalendar> calendars = this.alarmCalendars;
-        return calendars;
+        return this.alarmCalendars;
     }
 
     public void setAlarmCalendars(ArrayList <AlarmCalendar> alarmCalendars) {
