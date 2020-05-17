@@ -4,8 +4,8 @@
 
 ### 设置界面
 
-![image-20200517154203208](C:\Users\Administrator\Desktop\image-20200517154203208.png)
+![stting](https://github.com/Mengzuozhu/ReadmeImage/blob/master/MusicAlarm/setting.png)
 
 ### 闹钟提醒界面
 
-![image-20200517154022642](C:\Users\Administrator\Desktop\image-20200517154022642.png)
+![remind](https://github.com/Mengzuozhu/ReadmeImage/blob/master/MusicAlarm/remind.png)
